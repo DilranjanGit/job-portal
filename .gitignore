@@ -51,5 +51,8 @@ coverage/
 *.db
 *.sqlite
 
+# Ignore Angular build files
+.angular/
+
 # But not this file
 !.gitignore
