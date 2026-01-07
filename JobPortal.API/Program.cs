@@ -1,41 +1,53 @@
+
+//using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
+// Connection String
+var conn = builder.Configuration.GetConnectionString("SqlServer");
+
+// CORS for Angular dev server
+builder.Services.AddCors(o => o.AddPolicy("ng",
+    p => p.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:4200")));
+
+// Health Checks: basic + SQL Server
+builder.Services.AddHealthChecks()
+    .AddCheck("self", () => HealthCheckResult.Healthy("API is up"))
+    .AddSqlServer(conn!, name: "sql", tags: new[] { "db", "sqlserver" });
+
+// Swagger
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+// Example DI: register a simple service to demonstrate DI
+builder.Services.AddSingleton<IDateTimeProvider, SystemDateTimeProvider>();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi();
-}
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
+app.UseCors("ng");
 
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
+// Health endpoint
+app.MapHealthChecks("/health");
 
-app.MapGet("/weatherforecast", () =>
+// A simple endpoint to show DI working & basic OOP (interface → implementation)
+app.MapGet("/api/ping", (IDateTimeProvider clock) =>
 {
-    var forecast =  Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast");
+    return Results.Ok(new { message = "pong", serverTimeUtc = clock.UtcNow });
+});
 
 app.Run();
 
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
+// OOP + DI example contract
+public interface IDateTimeProvider
 {
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
+    DateTime UtcNow { get; }
+}
+public class SystemDateTimeProvider : IDateTimeProvider
+{
+    public DateTime UtcNow => DateTime.UtcNow;
 }
