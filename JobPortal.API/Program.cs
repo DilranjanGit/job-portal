@@ -1,4 +1,5 @@
 using JobPortal.API.Data;
+using Microsoft.OpenApi;
 using JobPortal.API.Application.Jobs;
 using JobPortal.API.Domain;
 using Microsoft.EntityFrameworkCore;
@@ -7,6 +8,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using JobPortal.API.Application.Students;
+using Scalar.AspNetCore; 
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -52,41 +55,91 @@ builder.Services.AddScoped<IJobService, JobService>();
 builder.Services.AddScoped<IStudentService, StudentService>();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer(); 
+builder.Services.AddOpenApi(options =>
+{
+    options.AddDocumentTransformer((document, context, cancellationToken) =>
+    {
+        document.Info.Title = "Job Portal API";
+        
+        // Define the Security Scheme (Bearer Token)
+        var securitySchemeName = "Bearer";
+        document.Components ??= new OpenApiComponents();
+        document.Components.SecuritySchemes.Add(securitySchemeName, new OpenApiSecurityScheme
+        {
+            Type = SecuritySchemeType.Http,
+            Scheme = "bearer",
+            BearerFormat = "JWT",
+            Description = "Enter your JWT token here."
+        });
+
+        // Apply globally to all operations (Optional)
+        document.SecurityRequirements.Add(new OpenApiSecurityRequirement
+        {
+            [new OpenApiSecurityScheme { Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = securitySchemeName } }] = Array.Empty<string>()
+        });
+
+        return Task.CompletedTask;
+    });
+});
+
+/*
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("v1", new OpenApiInfo { Title = "JobPortal.API v1", Version = "v1" });
+    // 1) Define the "bearer" security scheme (lowercase name is typical but any consistent name works)
+    options.AddSecurityDefinition("bearer", new OpenApiSecurityScheme
+    {
+        
+        Type = SecuritySchemeType.Http,
+        Scheme = "bearer",        // MUST be "bearer" for JWT in OpenAPI 3.x
+        BearerFormat = "JWT",
+        Description = "JWT Authorization using the Bearer scheme."
+        // Name/In are NOT needed for Http scheme; Swagger UI knows to use the Authorization header.
+    });
+
+    // 2) Require the scheme for all (or selected) operations
+    options.AddSecurityRequirement(document => new OpenApiSecurityRequirement
+    {
+        // This references the scheme you defined above; the [] means no OAuth scopes (JWT bearer)
+        [new OpenApiSecuritySchemeReference("bearer", document)] = []
+    });
+});
+
 builder.Services.AddSwaggerGen(c =>
 {
-    c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "JobPortal.API v1", Version = "v1" });
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "JobPortal.API v1", Version = "v1" });
 
     // THIS IS THE MISSING CODE BLOCK
-    c.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         Description = @"JWT Authorization header using the Bearer scheme. 
                       Enter 'Bearer' [space] and then your token in the text input below.
                       Example: 'Bearer 12345abcdef'",
         Name = "Authorization",
-        In = Microsoft.OpenApi.Models.ParameterLocation.Header,
-        Type = Microsoft.OpenApi.Models.SecuritySchemeType.ApiKey,
+        In = ParameterLocation.Header,
+        Type =SecuritySchemeType.ApiKey,
         Scheme = "Bearer"
     });
 
-    c.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement()
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement()
     {
         {
-            new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+            new OpenApiSecurityScheme
             {
-                Reference = new Microsoft.OpenApi.Models.OpenApiReference
+                Reference = new OpenApiReference
                 {
-                    Type = Microsoft.OpenApi.Models.ReferenceType.SecurityScheme,
+                    Type = ReferenceType.SecurityScheme,
                     Id = "Bearer"
                 },
                 Scheme = "oauth2",
                 Name = "Bearer",
-                In = Microsoft.OpenApi.Models.ParameterLocation.Header,
+                In = ParameterLocation.Header,
             },
             new List<string>()
         }
     });
 });
-
+*/
 
 try
 {
@@ -128,8 +181,26 @@ try
 
     if (app.Environment.IsDevelopment())
     {
-        app.UseSwagger();
-        app.UseSwaggerUI();
+        //app.UseSwagger();
+        //app.UseSwaggerUI();
+        app.MapOpenApi(); // This generates the openapi.json file
+       app.MapScalarApiReference(options => 
+        {
+            // This line tells Scalar EXACTLY where your JSON is
+       // options.WithEndpoint("/openapi/v1.json");
+        
+            options
+                .WithTitle("Job Portal API Docs")
+                .WithOpenApiRoutePattern("/openapi/v1.json")
+                .WithDefaultHttpClient(ScalarTarget.CSharp, ScalarClient.HttpClient)
+                // This is the new way to pre-select Bearer Auth
+                .WithHttpBearerAuthentication(bearer =>
+                 {
+                      bearer.Token = "YOUR_TOKEN_HERE"; // Optional default
+                 });
+                                   
+        });
+
     }
 
     app.UseHttpsRedirection();

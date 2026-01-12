@@ -56,3 +56,4 @@ coverage/
 
 # But not this file
 !.gitignore
+common query.sql
