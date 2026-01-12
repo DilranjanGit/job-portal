@@ -184,22 +184,19 @@ try
         //app.UseSwagger();
         //app.UseSwaggerUI();
         app.MapOpenApi(); // This generates the openapi.json file
-       app.MapScalarApiReference(options => 
+       app.MapScalarApiReference(options =>         
         {
-            // This line tells Scalar EXACTLY where your JSON is
-       // options.WithEndpoint("/openapi/v1.json");
-        
-            options
-                .WithTitle("Job Portal API Docs")
-                .WithOpenApiRoutePattern("/openapi/v1.json")
-                .WithDefaultHttpClient(ScalarTarget.CSharp, ScalarClient.HttpClient)
-                // This is the new way to pre-select Bearer Auth
-                .WithHttpBearerAuthentication(bearer =>
-                 {
-                      bearer.Token = "YOUR_TOKEN_HERE"; // Optional default
-                 });
-                                   
+            options.Title = "Job Portal API Docs";
+            options.OpenApiRoutePattern = "/openapi/v1.json";
+            options.DefaultHttpClient = new(ScalarTarget.CSharp, ScalarClient.HttpClient);
+
+             // Direct property assignment - no extension methods needed
+            options.Authentication = new ScalarAuthenticationOptions
+            {
+                PreferredSecurityScheme = "Bearer"
+            };
         });
+
 
     }
 
