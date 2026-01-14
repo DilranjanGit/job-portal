@@ -3,6 +3,7 @@ using JobPortal.API.Domain;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading;
 using System.Threading.Tasks;
+using JobPortal.API.DTOs;
 
 namespace JobPortal.API.Controllers
 {
@@ -21,7 +22,7 @@ namespace JobPortal.API.Controllers
 
         [HttpPost("register")]
         [Microsoft.AspNetCore.Authorization.AllowAnonymous]
-        public async Task<IActionResult> Register([FromBody] RegisterDto dto, CancellationToken cancellationToken)
+        public async Task<IActionResult> Register([FromBody] RegisterStudentDto dto, CancellationToken cancellationToken)
         {
             Console.WriteLine("Registering student: " + dto.Email);
             var result = await _studentService.RegisterAsync(dto.FullName, dto.Email, dto.Password, cancellationToken);
@@ -81,15 +82,8 @@ namespace JobPortal.API.Controllers
         }
     }
 
-    //DTOs
-
-    // Register DTO matching the Student profile and other required data    
-   public class RegisterDto
-    {
-        public required string FullName { get; set; }
-        public required string Email { get; set; }
-        public required string Password { get; set; }
-    }
+// add missing DTOs used in StudentsController
+    
     public class ApplyJobDto
     {
         public required string StudentEmail { get; set; }

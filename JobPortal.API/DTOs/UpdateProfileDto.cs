@@ -1,4 +1,8 @@
 // DTO for updating student profile
+
+namespace JobPortal.API.DTOs
+{   
+
 public class UpdateProfileDto
 {
     public required string Email { get; set; }
@@ -7,4 +11,5 @@ public class UpdateProfileDto
     public required string PhoneNumber { get; set; }
     public required string Location { get; set; }
     public required string[] Skills { get; set; }
+}
 }

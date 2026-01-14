@@ -97,65 +97,6 @@ builder.Services.AddOpenApi(options =>
     });
 });
 
-/*
-builder.Services.AddSwaggerGen(options =>
-{
-    options.SwaggerDoc("v1", new OpenApiInfo { Title = "JobPortal.API v1", Version = "v1" });
-    // 1) Define the "bearer" security scheme (lowercase name is typical but any consistent name works)
-    options.AddSecurityDefinition("bearer", new OpenApiSecurityScheme
-    {
-        
-        Type = SecuritySchemeType.Http,
-        Scheme = "bearer",        // MUST be "bearer" for JWT in OpenAPI 3.x
-        BearerFormat = "JWT",
-        Description = "JWT Authorization using the Bearer scheme."
-        // Name/In are NOT needed for Http scheme; Swagger UI knows to use the Authorization header.
-    });
-
-    // 2) Require the scheme for all (or selected) operations
-    options.AddSecurityRequirement(document => new OpenApiSecurityRequirement
-    {
-        // This references the scheme you defined above; the [] means no OAuth scopes (JWT bearer)
-        [new OpenApiSecuritySchemeReference("bearer", document)] = []
-    });
-});
-
-builder.Services.AddSwaggerGen(c =>
-{
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "JobPortal.API v1", Version = "v1" });
-
-    // THIS IS THE MISSING CODE BLOCK
-    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-    {
-        Description = @"JWT Authorization header using the Bearer scheme. 
-                      Enter 'Bearer' [space] and then your token in the text input below.
-                      Example: 'Bearer 12345abcdef'",
-        Name = "Authorization",
-        In = ParameterLocation.Header,
-        Type =SecuritySchemeType.ApiKey,
-        Scheme = "Bearer"
-    });
-
-    c.AddSecurityRequirement(new OpenApiSecurityRequirement()
-    {
-        {
-            new OpenApiSecurityScheme
-            {
-                Reference = new OpenApiReference
-                {
-                    Type = ReferenceType.SecurityScheme,
-                    Id = "Bearer"
-                },
-                Scheme = "oauth2",
-                Name = "Bearer",
-                In = ParameterLocation.Header,
-            },
-            new List<string>()
-        }
-    });
-});
-*/
-
 try
 {
     var app = builder.Build();
@@ -232,7 +173,7 @@ try
         return Results.Created($"/api/jobs/{job.Id}", job);
     }).RequireAuthorization();
 
-    // Company registration endpoint
+  /*  // Company registration endpoint
     app.MapPost("/api/auth/register/company", async(JobPortal.API.DTOs.RegisterCompanyDto dto, UserManager<ApplicationUser> um, AppDbContext db) =>
     {
         var user = new ApplicationUser { UserName = dto.Email, Email = dto.Email };
@@ -243,7 +184,7 @@ try
         await db.SaveChangesAsync();
         return Results.Ok();
     });
-
+*/
     // Login endpoint
     app.MapPost("/api/auth/login", async(JobPortal.API.DTOs.LoginDto dto, UserManager<ApplicationUser> um, SignInManager<ApplicationUser> sm) =>
     {

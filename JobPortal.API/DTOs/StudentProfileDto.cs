@@ -1,7 +1,7 @@
 
 using System;
 
-namespace JobPortal.API.Application.Students
+namespace JobPortal.API.DTOs
 {
     public class StudentProfileDto
     {
