@@ -1,0 +1,45 @@
+
+<!-- src/app/features/student/profile/profile.component.html -->
+<div class="container">
+  <h2>Profile</h2>
+
+  <form [formGroup]="form" (ngSubmit)="onSave()">
+    <div class="form-group">
+      <label>Full Name</label>
+      <input class="form-control" formControlName="fullName" />
+      <div class="error" *ngIf="form.get('fullName')?.touched && form.get('fullName')?.invalid">
+        <small *ngIf="form.get('fullName')?.errors?.['required']">Required</small>
+        <small *ngIf="form.get('fullName')?.errors?.['minlength']">Min 2 chars</small>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Email</label>
+      <input class="form-control" type="email" formControlName="email" />
+      <div class="error" *ngIf="form.get('email')?.touched && form.get('email')?.invalid">
+        <small *ngIf="form.get('email')?.errors?.['required']">Required</small>
+        <small *ngIf="form.get('email')?.errors?.['email']">Invalid email</small>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Phone</label>
+      <input class="form-control" formControlName="phone" />
+    </div>
+
+    <div class="form-group">
+      <label>Location</label>
+      <input class="form-control" formControlName="location" placeholder="e.g., Mumbai, MH" />
+    </div>
+
+    <div class="form-group">
+      <label>Skills (comma-separated)</label>
+      <input class="form-control" formControlName="skills" placeholder="Angular, TypeScript, Node.js" />
+    </div>
+
+    <button class="btn" type="submit">Save</button>
+
+    <div class="preview" *ngIf="saved">✅ Profile saved</div>
+    <div class="error" *ngIf="error">{{ error }}</div>
+  </form>
+</div>

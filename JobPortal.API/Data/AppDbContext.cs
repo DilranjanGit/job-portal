@@ -26,10 +26,10 @@ public DbSet<StudentProfile> Students => Set<StudentProfile>();
             modelBuilder.Entity<StudentProfile>()
                 .HasIndex(s => s.Email)
                 .IsUnique();
-            modelBuilder.Entity<StudentProfile>()
+            /*modelBuilder.Entity<StudentProfile>()
 
                 .HasIndex(s => s.PhoneNumber)
-                .IsUnique();
+                .IsUnique();*/
             modelBuilder.Entity<CompanyProfile>()
 
                 .HasIndex(c => c.Email)

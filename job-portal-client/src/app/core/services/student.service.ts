@@ -5,27 +5,21 @@ import { environment } from '../../environments/environment';
 import { Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
-export class AuthService {
+export class StudentService {
   private http = inject(HttpClient);
-  private baseUrl = `${environment.apiUrl}/api/auth`;
- /* private studentUrl = `${environment.apiUrl}/api/students`;
-  private companyUrl = `${environment.apiUrl}/api/companies`;
+  private studentUrl = `${environment.apiUrl}/api/students`;
+  
 
   // Register Student
   registerStudent(payload: { email: string; password: string; fullName: string}): Observable<any> {
     return this.http.post<{ token: string; role: string }>(`${this.studentUrl}/register`, payload);
   }
-
-  // Register Company
-  registerCompany(payload: { email: string; password: string; companyName: string; location: string }): Observable<any> {
-    return this.http.post(`${this.companyUrl}/register`, payload);
+ 
+  //Get Student Profile
+  getStudentProfile(email: string):Observable<any>{
+    return this.http.get<{ token: String; role: string }>(`${this.studentUrl}/profile`, {params: {email}});
   }
-*/
-  // Login
-  login(email: string, password: string): Observable<{ token: string; role: string }> {
-    return this.http.post<{ token: string; role: string }>(`${this.baseUrl}/login`, { email, password });
-  }
-
+  
   // Token & Role Management
   setAuth(token: string, role: string) {
     localStorage.setItem('token', token);

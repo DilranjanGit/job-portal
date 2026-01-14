@@ -1,0 +1,19 @@
+
+<!-- src/app/features/student/dashboard.component.html -->
+<div class="dashboard">
+  <aside class="sidebar">
+    <!--add User name from profile-->
+    <h3>User: {{ userName }} : Profile</h3>
+    <p>Email: {{ email }}</p>
+    <nav>
+      <a routerLink="profile" queryParam="{email:email}" routerLinkActive="active">Profile</a>
+      <a routerLink="resume" routerLinkActive="active">Resume</a>
+      <a routerLink="messages" routerLinkActive="active">Messages</a>
+      <a routerLink="jobs" routerLinkActive="active">Jobs</a>
+    </nav>
+  </aside>
+
+  <main class="content">
+    <router-outlet></router-outlet>
+  </main>
+</div>

@@ -4,11 +4,12 @@ import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { AuthService } from '../../core/services/auth.service';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router'; 
 
 @Component({
   standalone: true,
   selector: 'app-student-login',
-  imports: [ReactiveFormsModule, CommonModule],
+  imports: [RouterLink, ReactiveFormsModule, CommonModule],
   template: `
     <section class="login">
       <h2>Student Login</h2>
@@ -33,7 +34,9 @@ import { CommonModule } from '@angular/common';
         <button type="submit" [disabled]="form.invalid || loading">
           {{ loading ? 'Logging in...' : 'Login' }}
         </button>
-
+<p>Don't have an account? 
+    <a [routerLink]="['/student', 'register']">Register here</a>
+  </p>
         <p class="error" *ngIf="error">{{ error }}</p>
       </form>
     </section>
@@ -70,11 +73,11 @@ export class StudentLoginComponent {
       next: (res) => {
         // If backend role is not 'Student', optionally block here
         this.auth.setAuth(res.token, res.role);
-        this.router.navigate(['/student/dashboard']);
+        this.router.navigate(['/student/dashboard'], { state: { email } });
       },
       error: (err) => {
         this.error = 'Invalid credentials';
-        this.loading = false;
+        this.loading = false
       },
       complete: () => (this.loading = false)
     });

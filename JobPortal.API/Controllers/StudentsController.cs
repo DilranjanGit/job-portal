@@ -23,6 +23,7 @@ namespace JobPortal.API.Controllers
         [Microsoft.AspNetCore.Authorization.AllowAnonymous]
         public async Task<IActionResult> Register([FromBody] RegisterDto dto, CancellationToken cancellationToken)
         {
+            Console.WriteLine("Registering student: " + dto.Email);
             var result = await _studentService.RegisterAsync(dto.FullName, dto.Email, dto.Password, cancellationToken);
             if (!result) return BadRequest("Registration failed");
             return Ok();
@@ -72,8 +73,10 @@ namespace JobPortal.API.Controllers
         }
     }
 
-    // DTOs
-    public class RegisterDto
+    //DTOs
+
+    // Register DTO matching the Student profile and other required data    
+   public class RegisterDto
     {
         public required string FullName { get; set; }
         public required string Email { get; set; }

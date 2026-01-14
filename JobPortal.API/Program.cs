@@ -28,7 +28,13 @@ var jwtKey = builder.Configuration["Jwt:Key"] ?? "DksSecretKey123432Tempdefaultk
 var jwtIssuer = builder.Configuration["Jwt:Issuer"] ?? "JobPortal";
 var audience = builder.Configuration["Jwt:Audience"] ?? "JobPortalClients";
 
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+builder.Services.AddAuthentication(options =>
+{
+    // These lines force the API to use JWT instead of Cookies
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+})
     .AddJwtBearer(options =>
     {
         options.TokenValidationParameters = new TokenValidationParameters
@@ -48,6 +54,15 @@ builder.Services.AddCors(o => o.AddPolicy("ng",
 
 builder.Services.AddHealthChecks()
     .AddSqlServer(conn!, name: "sql", tags: new[] { "db", "sqlserver" });
+
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.Events.OnRedirectToLogin = context =>
+    {
+        context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+        return Task.CompletedTask;
+    };
+});
 
 builder.Services.AddSingleton<IDateTimeProvider, SystemDateTimeProvider>();
 builder.Services.AddScoped<IJobRepository, EfJobRepository>();
