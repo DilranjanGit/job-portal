@@ -3,13 +3,13 @@
 <div class="dashboard">
   <aside class="sidebar">
     <!--add User name from profile-->
-    <h3>User: {{ userName }} : Profile</h3>
+    <h3> {{ userName }} </h3>
     <p>Email: {{ email }}</p>
     <nav>
-      <a routerLink="profile" queryParam="{email:email}" routerLinkActive="active">Profile</a>
-      <a routerLink="resume" routerLinkActive="active">Resume</a>
-      <a routerLink="messages" routerLinkActive="active">Messages</a>
-      <a routerLink="jobs" routerLinkActive="active">Jobs</a>
+      <a routerLink="profile" [queryParams]="{email:email}" routerLinkActive="active">Profile</a>
+      <a routerLink="resume"  [queryParams]="{email:email}"  routerLinkActive="active">Resume</a>
+      <a routerLink="messages"  [queryParams]="{email:email}"  routerLinkActive="active">Messages</a>
+      <a routerLink="jobs"  [queryParams]="{email:email}"  routerLinkActive="active">Jobs</a>
     </nav>
   </aside>
 

@@ -3,6 +3,7 @@ using JobPortal.API.Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using JobPortal.API.DTOs;
+using Microsoft.AspNetCore.Mvc;
 
 namespace JobPortal.API.Application.Students
 {
@@ -22,30 +23,33 @@ namespace JobPortal.API.Application.Students
                 .AsNoTracking()
                 .FirstOrDefaultAsync(sp => sp.Email == email, cancellationToken);
         }
-        public async Task<StudentProfile> UpsertResumeAsync(string fullName, string email, string phoneNumber, string education, string? resumeText, string[]? skills, CancellationToken cancellationToken = default)
+        public async Task<bool> UpdateProfileAsync(string email,string education, string phoneNumber, string location, string[] skills, CancellationToken cancellationToken = default)
         {
             var student = await _dbContext.Students
                 .FirstOrDefaultAsync(sp => sp.Email == email, cancellationToken);
+            if (student == null) return false;
+            student.PhoneNumber = phoneNumber;
+            student.Location = location;
+            student.Education = education;
+            student.SkillsCsv = string.Join(",", skills);
+            student.UpdatedUtc = DateTime.UtcNow;
+            await _dbContext.SaveChangesAsync(cancellationToken);
+            return true;
+        }
+        public async Task<StudentProfile> UpsertResumeAsync([FromForm]IFormFile resumeFile,[FromForm] string email, CancellationToken cancellationToken = default)
+        {
+            var student = await _dbContext.Students
+                .FirstOrDefaultAsync(sp => sp.Email == email, cancellationToken);
+            if (student == null) return null;
 
-            if (student == null)
+            using (var memoryStream = new MemoryStream())
             {
-                student = new StudentProfile    
-                {
-                    Email = email,
-                    FullName= fullName,
-                    PhoneNumber= phoneNumber,
-                    Education= education,
-                    ResumeText = resumeText,
-                    SkillsCsv = skills != null ? string.Join(",", skills) : ""
-                };
-                _dbContext.Students.Add(student);
+                await resumeFile.CopyToAsync(memoryStream, cancellationToken);
+                student.ResumeFile = memoryStream.ToArray();
             }
-            else
-            {
-                student.ResumeText = resumeText;
-                student.SkillsCsv = skills != null ? string.Join(",", skills) : "";
-                student.UpdatedUtc = DateTime.UtcNow;
-            }
+            student.ResumeFileName = resumeFile.FileName;
+            student.ResumeContentType = resumeFile.ContentType;
+            student.ResumeUploadedAt = DateTime.UtcNow;
 
             await _dbContext.SaveChangesAsync(cancellationToken);
             return student;
@@ -62,7 +66,11 @@ namespace JobPortal.API.Application.Students
                 Email = email,
                 PhoneNumber = "", // default empty, can be updated later
                 Education = "",
-                ResumeText = null
+                Location = "",
+                SkillsCsv = "",
+                ResumeFile = null,
+                ResumeFileName = null,
+                ResumeContentType = null
             };
              _dbContext.Students.Add(student);
             await _dbContext.SaveChangesAsync(cancellationToken);

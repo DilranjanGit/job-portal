@@ -20,6 +20,16 @@ export class StudentService {
     return this.http.get<{ token: String; role: string }>(`${this.studentUrl}/profile`, {params: {email}});
   }
   
+  //Update Student Profile
+  updateStudentProfile(payload: { email: string; education: string; phoneNumber: string; location: string; skills: string[]}): Observable<any> {
+    return this.http.put<{ success: boolean }>(`${this.studentUrl}/profile`, payload);
+  }
+
+  // Upload Student Resume
+  uploadStudentResume(resumeFile: FormData): Observable<any> {
+    return this.http.post(`${this.studentUrl}/resume`, {resumeFile});
+  }
+
   // Token & Role Management
   setAuth(token: string, role: string) {
     localStorage.setItem('token', token);

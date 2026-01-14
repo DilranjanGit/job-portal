@@ -1,2 +1,9 @@
-<h2>Student Resume</h2>
+<!-- Resume Upload Form and upload button-->
+
+<h2>Update latest Resume</h2>
 <p>Upload your resume here.</p>
+<form [formGroup]="form" (submit)="onSubmit()">
+  <input type="file" formControlName="resumeFile" (change)="onFileChange($event)" />
+  <button type="submit">Upload</button>
+  <input type="text" formControlName="email" [value]="email" />
+</form>

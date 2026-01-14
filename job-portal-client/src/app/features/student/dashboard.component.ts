@@ -18,20 +18,21 @@ export class  StudentDashboardComponent  implements OnInit {
   email: string ='';
 
   constructor(private router: Router, private studentService: StudentService) {
-  const navigation = this.router.getCurrentNavigation();
+  
+   // You can use the email from the state here
+const navigation = this.router.getCurrentNavigation();
   const state = navigation?.extras.state as { email: string };
-  console.log(state?.email); // 'student@example.com'
-  const email = state?.email;
+  //console.log(state?.email); // 'student@example.com'
+    this.email = state?.email || '';
+}
+  ngOnInit() {
+
+  const email = this.email;
 //call student service to fetch profile or other data using the email
   this.studentService.getStudentProfile(email).subscribe(profile => {
     console.log('Student Profile:', profile);
     this.userName = profile.fullName;
     this.email = profile.email;
   });
-
-}
-  ngOnInit() {
-    // You can use the email from the state here
-
   }
 }

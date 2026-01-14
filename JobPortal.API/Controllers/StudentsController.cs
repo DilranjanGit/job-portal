@@ -37,12 +37,20 @@ namespace JobPortal.API.Controllers
             if (profile == null) return NotFound();
             return Ok(profile);
         }
+        //Update Profile details like name, skills, education, phonenumber etc.
+        [HttpPut("profile")]
+        public async Task<IActionResult> UpdateProfile([FromBody] UpdateProfileDto dto, CancellationToken cancellationToken)
+        {
+            var result = await _studentService.UpdateProfileAsync(dto.Email, dto.Education, dto.PhoneNumber, dto.Location, dto.Skills, cancellationToken);
+            if (!result) return BadRequest("Profile update failed");
+            return Ok();
+        }
 
         // Upsert Resume
         [HttpPost("resume")]
-        public async Task<IActionResult> UpsertResume([FromBody] ResumeDto dto, CancellationToken cancellationToken)
+        public async Task<IActionResult> UpsertResume([FromForm] IFormFile resumeFile, [FromForm] string email, CancellationToken cancellationToken)
         {
-            var profile = await _studentService.UpsertResumeAsync(dto.FullName, dto.Email, dto.PhoneNumber, dto.Education, dto.ResumeText, dto.Skills, cancellationToken);
+            var profile = await _studentService.UpsertResumeAsync(resumeFile, email, cancellationToken);
             return Ok(profile);
         }
 
@@ -81,15 +89,6 @@ namespace JobPortal.API.Controllers
         public required string FullName { get; set; }
         public required string Email { get; set; }
         public required string Password { get; set; }
-    }
-    public class ResumeDto
-    {
-        public required string FullName { get; set; }
-        public required string Email { get; set; }
-        public required string PhoneNumber { get; set; }
-        public required string Education { get; set; }
-        public string? ResumeText { get; set; }
-        public string[]? Skills { get; set; }
     }
     public class ApplyJobDto
     {
