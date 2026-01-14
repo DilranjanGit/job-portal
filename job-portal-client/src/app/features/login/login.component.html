@@ -1,0 +1,38 @@
+<section class="login">
+      <h2>Job Portal Login</h2>
+
+      <form [formGroup]="form" (ngSubmit)="login()">
+        <div class="form-row">
+          <label>Email</label>
+          <input type="email" formControlName="email" placeholder="test@example.com" />
+          <small class="error" *ngIf="form.controls.email.touched && form.controls.email.invalid">
+            Valid email is required
+          </small>
+        </div>
+<!--Add Show password functionality -->
+        <div class="form-row">
+          <label>Password</label>
+          <div class="password-wrapper">
+        <input id="password" [type]="showPassword ? 'text' : 'password'" class="form-control" formControlName="password" placeholder="Enter password" />
+        <button type="button" class="toggle" (click)="showPassword = !showPassword">
+          {{ showPassword ? 'Hide' : 'Show' }}
+        </button>
+      </div>
+          <small class="error" *ngIf="form.controls.password.touched && form.controls.password.invalid">
+            Password is required
+          </small>
+        </div>
+
+        <button type="submit" class="submitButton" [disabled]="form.invalid || loading">
+          {{ loading ? 'Logging in...' : 'Login' }}
+        </button>
+<p>Don't have an account? 
+    <a [routerLink]="['/student', 'register']">Register Employee here</a>
+    <br/>
+    <a [routerLink]="['/company', 'register']">Register Employer here</a>
+  </p>
+        <p class="error" *ngIf="error">{{ error }}</p>
+      </form>
+    </section>
+  
+   

@@ -7,6 +7,8 @@ import { RoleGuard } from './core/guards/role.guard';
 export const routes: Routes = [
   // Student login
   { path: 'student/login', loadComponent: () => import('./features/student/login.component').then(m => m.StudentLoginComponent) },
+// Login route
+{ path: 'login/login', loadComponent: () => import('./features/login/login.component').then(m => m.LoginComponent) },
 
   // Company login
   { path: 'company/login', loadComponent: () => import('./features/company/login.component').then(m => m.CompanyLoginComponent) },
@@ -57,8 +59,13 @@ export const routes: Routes = [
     canActivate: [AuthGuard, RoleGuard], data: { roles: ['Company'] },
     loadComponent: () => import('./features/company/dashboard.component').then(m => m.CompanyDashboardComponent)
   },
+  {
+    path: 'admin/dashboard',
+    canActivate: [AuthGuard, RoleGuard], data: { roles: ['Admin'] },
+    loadComponent: () => import('./features/admin/dashboard.component').then(m => m.AdminDashboardComponent)  
+  },
 
   // Default route → student login (adjust if you prefer a landing page)
-  { path: '', pathMatch: 'full', redirectTo: 'student/login' },
-  { path: '**', redirectTo: 'student/login' }
+  { path: '', pathMatch: 'full', redirectTo: 'login/login' },
+  { path: '**', redirectTo: 'login/login' }
 ];
