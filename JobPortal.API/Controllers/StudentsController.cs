@@ -9,7 +9,7 @@ namespace JobPortal.API.Controllers
 {
     [ApiController]
     [Route("api/students")]
-    [Microsoft.AspNetCore.Authorization.Authorize(Roles = "Student")]
+    [Microsoft.AspNetCore.Authorization.Authorize(Roles = AppRoles.Student)]
     public class StudentsController : ControllerBase
     {
         private readonly IStudentService _studentService;

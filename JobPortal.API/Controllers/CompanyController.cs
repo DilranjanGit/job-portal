@@ -9,7 +9,7 @@ namespace JobPortal.API.Controllers
 {
     [ApiController]
     [Route("api/company")]
-    [Microsoft.AspNetCore.Authorization.Authorize(Roles = "Company")]
+    [Microsoft.AspNetCore.Authorization.Authorize(Roles = AppRoles.Company)]
     public class CompanyController : ControllerBase
     {
         private readonly ICompanyService _companyService;
