@@ -1,10 +1,10 @@
 
-// src/app/features/company/dashboard.component.ts
+// src/app/features/dashboard.component.ts
 import { Component,OnInit } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { AuthService } from '../../core/services/auth.service';
+import { AuthService } from '../core/services/auth.service';
 
 @Component({
   standalone: true,

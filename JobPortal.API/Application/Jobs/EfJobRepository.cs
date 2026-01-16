@@ -36,4 +36,12 @@ public class EfJobRepository : IJobRepository
         await _db.SaveChangesAsync(ct);
         return true;
     }
+    public async Task<bool> UpdateApplicationStatusAsync(int jobApplicationId, ApplicationStatus status, CancellationToken ct = default)
+    {
+        var application = await _db.JobApplications.FindAsync([jobApplicationId], ct);
+        if (application is null) return false;
+        application.Status = status;
+        await _db.SaveChangesAsync(ct);
+        return true;
+    }
 }

@@ -1,4 +1,4 @@
-<!-- src/app/features/admin/dashboard.component.html -->
+<!-- src/app/features/dashboard.component.html -->
 
 <div class="dashboard">
   <aside class="sidebar">
@@ -23,14 +23,14 @@
 
       <!-- Show these links for student user -->
       <ng-container *ngIf="role == 'Student'">
-      <a routerLink="/student/dashboard/profile" [queryParams]="{email:email}" routerLinkActive="active">Profile</a>
+      <a routerLink="profile" [queryParams]="{email:email}" routerLinkActive="active">Profile</a>
       <a routerLink="resume"  [queryParams]="{email:email}"  routerLinkActive="active">Resume</a>
       <a routerLink="messages"  [queryParams]="{email:email}"  routerLinkActive="active">Messages</a>
       <a routerLink="jobs"  [queryParams]="{email:email}"  routerLinkActive="active">Jobs</a>
       </ng-container>
   <!-- Show these links for normal Company -->
       <ng-container *ngIf="role == 'Company'">
-      <a routerLink="jobs" [queryParams]="{email:email}" routerLinkActive="active">Post Jobs</a>
+      <a routerLink="postJobs" [queryParams]="{email:email}" routerLinkActive="active">Post Jobs</a>
       <a routerLink="interview"  [queryParams]="{email:email}"  routerLinkActive="active">Schedule interview</a>
       <a routerLink="messages"  [queryParams]="{email:email}"  routerLinkActive="active">Messages</a>
       

@@ -5,15 +5,10 @@ import { RoleGuard } from './core/guards/role.guard';
 
 // Lazy import or direct import—here we use dynamic for smaller initial bundle
 export const routes: Routes = [
-  // Student login
-  { path: 'student/login', loadComponent: () => import('./features/student/login.component').then(m => m.StudentLoginComponent) },
-// Login route
-{ path: 'login/login', loadComponent: () => import('./features/login/login.component').then(m => m.LoginComponent) },
+  // Login route
+  { path: 'login/login', loadComponent: () => import('./features/login/login.component').then(m => m.LoginComponent) },
 
-  // Company login
-  { path: 'company/login', loadComponent: () => import('./features/company/login.component').then(m => m.CompanyLoginComponent) },
-
-  // Example protected routes (use your real components)
+   // Example protected routes (use your real components)
   {
     path: 'student/dashboard',
     canActivate: [AuthGuard, RoleGuard], data: { roles: ['Student'] },
@@ -26,33 +21,18 @@ export const routes: Routes = [
       },
       {
         path: 'resume',
+   
         loadComponent: () => import('./features/student/resume.component').then(m=>m.StudentResumeComponent)
       }
     ]
-  }, /* 
-  {
-    path: 'student/profile',
-    canActivate: [AuthGuard, RoleGuard], data: { roles: ['Student'] },
-    loadComponent: () => import('./features/student/profile.component').then(m => m.StudentProfileComponent)  
   },
-  {
-    path: 'student/resume',
-    canActivate: [AuthGuard, RoleGuard], data: { roles: ['Student'] },
-    loadComponent: () => import('./features/student/resume.component').then(m => m.StudentResumeComponent)  
-  },
-{
-    path: 'student/messages',
-    canActivate: [AuthGuard, RoleGuard], data: { roles: ['Student'] },
-    loadComponent: () => import('./features/student/messages.component').then(m => m.StudentMessagesComponent)
-  },
-  {
-    path: 'student/jobs',
-    canActivate: [AuthGuard, RoleGuard], data: { roles: ['Student'] },
-    loadComponent: () => import('./features/student/jobs.component').then(m => m.StudentJobsComponent)
-  },*/
   {
     path: 'student/register',
     loadComponent: () => import('./features/student/registration.component').then(m => m.RegistrationComponent)
+  },
+  {
+    path: 'company/register',
+    loadComponent: () => import('./features/company/registration.component').then(m => m.CompanyRegistrationComponent)
   },
   {
     path: 'company/dashboard',
@@ -61,8 +41,29 @@ export const routes: Routes = [
   },
   {
     path: 'admin/dashboard',
-    canActivate: [AuthGuard, RoleGuard], data: { roles: ['Admin'] },
+    canActivate: [AuthGuard, RoleGuard], data: { roles: ['Admin','Student','Company'] },
     loadComponent: () => import('./features/admin/dashboard.component').then(m => m.AdminDashboardComponent)  
+  },
+  {
+    path: 'dashboard',
+    canActivate: [AuthGuard, RoleGuard], data: { roles: ['Admin','Student','Company'] },
+    loadComponent: () => import('./features/dashboard.component').then(m => m.AdminDashboardComponent) ,
+     children:[
+      {
+        path: 'profile',
+        loadComponent: () => import('./features/student/profile.component').then(m => m.StudentProfileComponent)
+      },
+      {
+        path: 'resume',
+   
+        loadComponent: () => import('./features/student/resume.component').then(m=>m.StudentResumeComponent)
+      },
+      {
+        path: 'postJobs',
+   
+        loadComponent: () => import('./features/company/postJobs.component').then(m=>m.PostJobsComponent)
+      }
+    ] 
   },
 
   // Default route → student login (adjust if you prefer a landing page)

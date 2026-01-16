@@ -39,4 +39,20 @@ public class JobService : IJobService
 
         return await _repo.AddAsync(job,ct);
     }
+
+    public Task<Job> GetJobByIdAsync(int jobId, CancellationToken ct = default)
+    {
+        return _repo.GetAsync(jobId,ct);
+    }
+
+    public async Task<IEnumerable<Job>> GetAllJobsAsync(CancellationToken ct = default)
+    {
+        return await _db.Jobs
+            .Include(j=>j.Company)
+            .ToListAsync(ct);
+    }
+    public Task<bool> UpdateApplicationStatusAsync(int jobApplicationId, ApplicationStatus status, CancellationToken ct = default)
+    {
+        return _repo.UpdateApplicationStatusAsync(jobApplicationId, status, ct);
+    }
 }

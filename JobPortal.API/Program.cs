@@ -98,6 +98,16 @@ builder.Services.AddOpenApi(options =>
         return Task.CompletedTask;
     });
 });
+ builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll",
+        policy => policy.AllowAnyHeader()
+                        .AllowAnyMethod()
+                        .WithOrigins("http://localhost:4200"));
+});
+
+builder.Services.AddControllers()
+    .ConfigureApiBehaviorOptions(o => o.SuppressModelStateInvalidFilter = true);
 
 try
 {
@@ -123,15 +133,16 @@ try
             }
         }
         var adminEmail = builder.Configuration["AdminUser:Email"] ?? "admin@jobportal.com";
+        var adminUserName = builder.Configuration["AdminUser:UserName"] ?? "Administrator";
         var adminPassword = builder.Configuration["AdminUser:Password"] ?? "Admin@123";
         var adminUser = userManager.FindByEmailAsync(adminEmail).Result;
         if (adminUser is null)
         {
-            adminUser = new ApplicationUser { UserName = adminEmail, Email = adminEmail };
+            adminUser = new ApplicationUser { UserName = adminUserName, Email = adminEmail };
             var result = userManager.CreateAsync(adminUser, adminPassword).Result;
             if (!result.Succeeded)
             {
-                throw new Exception($"Failed to create admin user: {adminEmail} :" + string.Join(", ", result.Errors.Select(e => e.Description)));
+                throw new Exception($"Failed to create admin user: {adminUserName} :" + string.Join(", ", result.Errors.Select(e => e.Description)));
             }
             userManager.AddToRoleAsync(adminUser, AppRoles.Admin).Wait();
         }
@@ -159,35 +170,21 @@ try
     }
 
     app.UseHttpsRedirection();
-    app.UseCors("ng");
+    app.UseCors("AllowAll");
     app.UseAuthentication();
     app.UseAuthorization();
     app.MapHealthChecks("/health");
     // If you get an error here, ensure AddControllers() is called and you have at least one controller in your project.
     app.MapControllers();
 
-    // Job creation endpoint
-    app.MapPost("/api/jobs", async(JobPortal.API.DTOs.JobCreateDto dto, IJobService service, HttpContext ctx, CancellationToken ct) =>
+// Get User Profile
+    app.MapGet("/api/auth/GetUserDetails",async (string email,UserManager<ApplicationUser> um )=>
     {
-        if (!ctx.User.IsInRole(JobPortal.API.Domain.AppRoles.Company)) return Results.Forbid();
-        var email = ctx.User.FindFirst("email")?.Value!;
-        var job = await service.CreateJobAsync(dto.CompanyEmail, dto.Title, dto.Description, dto.Location, dto.Salary, dto.Skills, ct);
-        return Results.Created($"/api/jobs/{job.Id}", job);
-    }).RequireAuthorization();
-
-  /*  // Company registration endpoint
-    app.MapPost("/api/auth/register/company", async(JobPortal.API.DTOs.RegisterCompanyDto dto, UserManager<ApplicationUser> um, AppDbContext db) =>
-    {
-        var user = new ApplicationUser { UserName = dto.Email, Email = dto.Email };
-        var result = await um.CreateAsync(user, dto.Password);
-        if (!result.Succeeded) return Results.BadRequest(result.Errors);
-        await um.AddToRoleAsync(user, JobPortal.API.Domain.AppRoles.Company);
-        db.Companies.Add(new CompanyProfile { CompanyName = dto.CompanyName, Email = dto.Email, Location = dto.Location });
-        await db.SaveChangesAsync();
-        return Results.Ok();
-    });
-*/
-    // Login endpoint
+        var user = await um.FindByEmailAsync(email);
+        return Results.Ok(new {userName = user.UserName, email = user.Email} );
+    } );
+   
+   // Login endpoint
     app.MapPost("/api/auth/login", async(JobPortal.API.DTOs.LoginDto dto, UserManager<ApplicationUser> um, SignInManager<ApplicationUser> sm) =>
     {
         var user = await um.FindByEmailAsync(dto.Email);

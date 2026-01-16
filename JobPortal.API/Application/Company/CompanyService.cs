@@ -63,13 +63,79 @@ namespace JobPortal.API.Application.Company
             throw new NotImplementedException();
         }
 
-        public Task<bool> PostToJobAsync(string companyEmail, string jobTitle, string description, string location, string skillsCsv, decimal salary, CancellationToken cancellationToken = default)
+        public async Task<bool> PostToJobAsync(string email, string jobTitle, string description, string location, string skillsCsv, decimal salary, CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            //get company profile by email
+            var companyProfile = await _dbContext.Companies
+                .AsNoTracking()
+                .FirstOrDefaultAsync(c => c.Email == email, cancellationToken);
+            if (companyProfile == null) return false;
+            //check if company already posted the job with same title
+
+            var existingJob = await _dbContext.Jobs
+                .AsNoTracking()
+                .FirstOrDefaultAsync(j => j.CompanyProfileId == companyProfile.Id && j.Title == jobTitle, cancellationToken);
+            if (existingJob != null) return false;
+
+            // Create Job
+            var job = new Job
+            {
+                CompanyProfileId = companyProfile.Id,
+                Title = jobTitle,
+                Description = description,
+                Location = location,
+                SkillsCsv = skillsCsv,
+                Salary = salary,
+                PostedUtc = DateTime.UtcNow
+            };
+            _dbContext.Jobs.Add(job);
+            await _dbContext.SaveChangesAsync(cancellationToken);
+            return true;
         }
+        public async Task<CompanyProfile> GetCompanyProfileAsync(string companyEmail, CancellationToken cancellationToken = default)
+        {
+            return await _dbContext.Companies
+                .AsNoTracking()
+                .FirstOrDefaultAsync(c => c.Email == companyEmail, cancellationToken);
+        }
+        public async Task<IEnumerable<JobApplicationDto>> GetJobApplicationsAsync(int jobId, CancellationToken cancellationToken = default)
+        {
+            var applications = await _dbContext.JobApplications //.Include(ja => ja.Student).Include(ja => ja.Job)
+                .AsNoTracking()
+                .Where(ja => ja.Id == jobId)
+                .Select(s => new JobApplicationDto
+                {
+                    JobTitle = s.Job.Title,
+                    JobDescription = s.Job.Description,
+                    JobLocation = s.Job.Location,
+                    JobSkills = s.Job.SkillsCsv,
+                    StudentFullName = s.Student.FullName,
+                    StudentEmail = s.Student.Email,
+                    AppliedUtc = s.AppliedUtc,
+                    Status =  s.Status.ToString()
+                })
+                .ToListAsync(cancellationToken);
 
+            return applications;
+        }
+        public async Task<bool> ScheduleInterviewAsync(int jobApplicationId, DateTime interviewDate,string locationOrLink, int mode, CancellationToken cancellationToken = default)
+        {
+            var job = await _dbContext.JobApplications
+                .AsNoTracking()
+                .FirstOrDefaultAsync(j => j.Id == jobApplicationId, cancellationToken);
+            if (job == null) return false;
 
-
-
+            var interview = new Interview
+            {
+                JobApplicationId=jobApplicationId,
+                ScheduledAtLocal = interviewDate,
+                LocationOrLink = locationOrLink,
+                Mode = (InterviewMode)mode,
+                Status = InterviewStatus.Scheduled
+            };
+            _dbContext.Interviews.Add(interview);
+            await _dbContext.SaveChangesAsync(cancellationToken);
+            return true;
+        }
     }
 }

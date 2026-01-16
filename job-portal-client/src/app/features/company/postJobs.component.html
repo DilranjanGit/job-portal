@@ -1,0 +1,119 @@
+
+<!-- company-registration.component.html -->
+<div class="container">
+  <h2>Post New Jobs</h2>
+
+  <form [formGroup]="registrationForm" (ngSubmit)="onSubmit()" novalidate>
+    <!-- Company Name field disable -->
+    <div class="form-group">
+        
+      <label for="companyName">Company Name</label>
+      <input
+        id="companyName"
+        type="text"
+        class="form-control"
+        formControlName="companyName"
+        placeholder="Enter company name"
+      />
+      <div class="error" *ngIf="form['companyName'].touched && form['companyName'].invalid">
+        <small *ngIf="form['companyName'].errors?.['required']">Company name is required.</small>
+        <small *ngIf="form['companyName'].errors?.['minlength']">
+          Name must be at least 2 characters.
+        </small>
+      </div>
+    </div>
+
+    <!-- Email -->
+    <div class="form-group">
+      <label for="email">Email</label>
+      <input
+        id="email"
+        type="email"
+        class="form-control"
+        formControlName="email"
+        placeholder="Enter email"
+      />
+      <div class="error" *ngIf="form['email'].touched && form['email'].invalid">
+        <small *ngIf="form['email'].errors?.['required']">Email is required.</small>
+        <small *ngIf="form['email'].errors?.['email']">Enter a valid email.</small>
+      </div>
+    </div>
+ <!-- Job Title -->
+    <div class="form-group">
+      <label for="title">Title</label>
+      <input
+        id="title"
+        type="text"
+        class="form-control"
+        formControlName="title"
+        placeholder="Enter Job Title"
+      />
+      <div class="error" *ngIf="form['title'].touched && form['title'].invalid">
+        <small *ngIf="form['title'].errors?.['required']">Job Title is required.</small>
+        <small *ngIf="form['title'].errors?.['minlength']">Job Title must be at least 2 characters.</small>
+      </div>
+    </div>
+     <!-- Job Description -->
+    <div class="form-group">
+      <label for="description">Description</label>
+      <input
+        id="description"
+        type="text"
+        class="form-control"
+        formControlName="description"
+        placeholder="Enter Job Description"
+      />
+      <div class="error" *ngIf="form['description'].touched && form['description'].invalid">
+        <small *ngIf="form['description'].errors?.['required']">Job Description is required.</small>
+        <small *ngIf="form['description'].errors?.['minlength']">Job Description must be at least 2 characters.</small>
+      </div>
+    </div>
+    <!-- Company Job Location -->
+    <div class="form-group">
+      <label for="location">Location</label>
+      <input
+        id="location"
+        type="text"
+        class="form-control"
+        formControlName="location"
+        placeholder="Enter Job location"
+      />
+      <div class="error" *ngIf="form['location'].touched && form['location'].invalid">
+        <small *ngIf="form['location'].errors?.['required']">Location is required.</small>
+        <small *ngIf="form['location'].errors?.['minlength']">Location must be at least 2 characters.</small>
+      </div>
+    </div>
+
+     <!-- SkillsCsv -->
+    <div class="form-group">
+      <label for="skillsCsv">Skills</label>
+      <input
+        id="skillsCsv"
+        type="text"
+        class="form-control"
+        formControlName="skillsCsv"
+        placeholder="Angular, Node.js, Spring"
+      />
+      <div class="error" *ngIf="form['skillsCsv'].touched && form['skillsCsv'].invalid">
+        <small *ngIf="form['skillsCsv'].errors?.['required']">SkillsCsv is required.</small>
+       
+      </div>
+    </div>
+    
+    <!-- Salary -->
+    <div class="form-group">
+      <label for="salary">Salary Offer</label>
+      <div >
+        <input
+          id="salary"
+          type="text"
+          class="form-control"
+          formControlName="salary"
+          placeholder="Enter Salary"
+        />
+        
+    </div>
+</div>
+    <button type="submit" [disabled]="registrationForm.invalid">Register</button>
+  </form>
+</div>

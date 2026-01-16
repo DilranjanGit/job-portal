@@ -36,7 +36,10 @@ export class LoginComponent {
       next: (res) => {
         // If backend role is not 'Student', optionally block here
         this.auth.setAuth(res.token, res.role);
-        if (res.role === 'Student') {
+        const role = res.role;
+        this.router.navigate([`/dashboard`], { state: { email, role } });
+
+        /*  if (res.role === 'Student') {
           this.router.navigate(['/student/dashboard'], { state: { email } });
         } else if (res.role === 'Company') {
           this.router.navigate(['/company/dashboard'], { state: { email } });
@@ -47,7 +50,7 @@ export class LoginComponent {
           this.error = 'Unauthorized role';
           alert('Unauthorized role');
         }
-
+*/
       },
       error: (err) => {
         this.error = 'Invalid credentials';

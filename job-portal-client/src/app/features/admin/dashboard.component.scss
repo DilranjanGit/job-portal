@@ -1,0 +1,29 @@
+/* src/app/features/admin/dashboard/dashboard.component.scss */
+.dashboard {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  min-height: 100vh;
+}
+
+.sidebar {
+  border-right: 1px solid #e5e7eb;
+  padding: 16px;
+  background: #f8fafc;
+}
+.sidebar h3 { margin: 0 0 12px; }
+.sidebar a {
+  display: block;
+  padding: 8px 10px;
+  border-radius: 6px;
+  color: #111827;
+  text-decoration: none;
+  margin-bottom: 6px;
+}
+.sidebar a.active, .sidebar a:hover {
+  background: #e5edff;
+  color: #1d4ed8;
+}
+
+.content {
+  padding: 20px;
+}

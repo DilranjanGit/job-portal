@@ -25,7 +25,10 @@ export class AuthService {
   login(email: string, password: string): Observable<{ token: string; role: string }> {
     return this.http.post<{ token: string; role: string }>(`${this.baseUrl}/login`, { email, password });
   }
-
+  //Get User Details
+  GetUserDetails(email: string): Observable<any>{
+    return this.http.get<{ userName: string; email: string }>(`${this.baseUrl}/GetUserDetails`, {params: {email}});
+  }
   // Token & Role Management
   setAuth(token: string, role: string) {
     localStorage.setItem('token', token);
