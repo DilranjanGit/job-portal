@@ -1,3 +1,8 @@
+export interface Job{
+id: number,
+companyProfileID: number,
+
+}
 
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
@@ -30,6 +35,15 @@ export class StudentService {
     return this.http.post(`${this.studentUrl}/resume`, {resumeFile});
   }
 
+  //Get All Jobs match with student skills ans location
+  getAllJobs(email: string):Observable<any>{
+    return this.http.get<Job[]>(`${this.studentUrl}/jobs`,{params: {email}});
+  }
+ 
+  // Apply job
+  ApplyJob( payload: {studentEmail: string; jobId: string} ):Observable<any>{
+     return this.http.post<{success: boolean }>(`${this.studentUrl}/apply`, payload);
+  }
   // Token & Role Management
   setAuth(token: string, role: string) {
     localStorage.setItem('token', token);
@@ -43,7 +57,6 @@ export class StudentService {
   getRole(): string | null {
     return localStorage.getItem('role');
   }
-
   logout() {
     localStorage.clear();
   }

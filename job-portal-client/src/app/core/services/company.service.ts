@@ -25,7 +25,7 @@ export class CompanyService {
   }
 
   //Post Jobs
-  postJobs(payload: { email:string; title: string; description: string; location : string; skillsCsv: string; salary: string}): Observable<any>{
+  postJobs(payload: { companyEmail:string; title: string; description: string; location : string; skills: string; salary: string}): Observable<any>{
     return this.http.post<{ success:boolean}>(`${this.companyUrl}/jobs`,payload);
   }
   

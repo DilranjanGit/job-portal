@@ -27,9 +27,10 @@
           {{ loading ? 'Logging in...' : 'Login' }}
         </button>
 <p>Don't have an account? 
-    <a [routerLink]="['/student', 'register']">Register Employee here</a>
+  <br/>
+    <a [routerLink]="['/student', 'register']">Employee SignUp</a>
     <br/>
-    <a [routerLink]="['/company', 'register']">Register Employer here</a>
+    <a [routerLink]="['/company', 'register']">Employer SignUp</a>
   </p>
         <p class="error" *ngIf="error">{{ error }}</p>
       </form>

@@ -76,7 +76,7 @@ namespace JobPortal.API.Application.Students
             await _dbContext.SaveChangesAsync(cancellationToken);
            
             // create ApplicationUser for login
-            var user = new ApplicationUser { UserName = fullName, Email = email };
+            var user = new ApplicationUser { UserName = email, Email = email };
             var result = await _userManager.CreateAsync(user, password);
             if (!result.Succeeded) return false;
             await _userManager.AddToRoleAsync(user, AppRoles.Student);

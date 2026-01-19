@@ -54,13 +54,14 @@ namespace JobPortal.API.Controllers
         [HttpPost("jobs")]
         public async Task<IActionResult> PostJob([FromBody] JobCreateDto dto, CancellationToken cancellationToken)
         {
-            if(!ModelState.IsValid)
+           if(!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
             var job = await _companyService.PostToJobAsync(dto.CompanyEmail, dto.Title, dto.Description, dto.Location, dto.Skills, dto.Salary, cancellationToken);
             //return Created($"/api/jobs/{job.Id}", job);
-            return Ok();
+            if (!job) return BadRequest("Job Posting Failed..");
+            return Ok(job);
         }
 
         //Get applications for a job

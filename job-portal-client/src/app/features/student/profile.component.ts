@@ -37,7 +37,7 @@ export class  StudentProfileComponent implements OnInit
   }
   constructor(private fb: FormBuilder, private api: StudentService) {
     this.form = this.fb.group({
-      fullName: ['', [Validators.required, Validators.minLength(2)]],
+      fullName: [{value: '', disabled: true}, [Validators.required, Validators.minLength(2)]],
       email: [{value: '', disabled: true}, [Validators.required, Validators.email]],
       phoneNumber: ['', [Validators.required, Validators.pattern(/^\+\d+-\d{10}$/)]], //  E.+91-XXXXXXXXXX  format
       location: ['', Validators.required],

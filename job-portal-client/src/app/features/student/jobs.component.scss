@@ -1,0 +1,122 @@
+
+/* Container styling */
+.container {
+  max-width: 850px;
+  margin: 20px auto;
+  padding: 0 16px;
+}
+
+/* Heading */
+h2 {
+  margin-bottom: 20px;
+  font-weight: 600;
+}
+
+/* Error message */
+.error {
+  background: #ffe6e6;
+  border: 1px solid #ffb3b3;
+  color: #a30000;
+  padding: 10px 12px;
+  border-radius: 6px;
+  margin-bottom: 15px;
+  font-size: 14px;
+}
+
+/* When no jobs available */
+.empty {
+  color: #666;
+  padding: 12px 0;
+  font-size: 14px;
+}
+
+/* Job list wrapper */
+.job-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Job card */
+.job-card {
+  background: #ffffff;
+  border: 1px solid #e4e4e4;
+  border-radius: 10px;
+  padding: 16px 18px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
+
+  transition: box-shadow 0.2s ease;
+
+  &:hover {
+    box-shadow: 0 3px 8px rgba(0,0,0,0.08);
+  }
+}
+
+/* Job left section */
+.job-details {
+  flex: 1;
+
+  .job-title {
+    margin: 0;
+    font-weight: 600;
+    font-size: 18px;
+    margin-bottom: 6px;
+  }
+
+  .job-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    color: #555;
+    font-size: 14px;
+
+    span {
+      display: block;
+    }
+  }
+}
+
+/* Job actions */
+.job-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: flex-end;
+}
+
+/* Apply button */
+.apply-btn {
+  background-color: #2563eb;
+  color: white;
+  border: 0;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+
+  transition: background 0.2s ease;
+
+  &:hover {
+    background-color: #1e4fb8;
+  }
+
+  &:disabled {
+    background-color: #9bbcf7;
+    cursor: not-allowed;
+  }
+}
+
+/* Applied label */
+.applied-label {
+  background: #d1fae5;
+  color: #065f46;
+  border: 1px solid #a7f3d0;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+}

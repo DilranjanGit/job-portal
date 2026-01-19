@@ -1,9 +1,9 @@
 
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CompanyService } from '../../core/services/company.service';
-import { Router } from '@angular/router';
+import {ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-postJobs',
@@ -12,11 +12,19 @@ import { Router } from '@angular/router';
   templateUrl: './postJobs.component.html',
   styleUrls: ['./postJobs.component.scss']
 })
-export class PostJobsComponent {
+export class PostJobsComponent implements OnInit{
   registrationForm: FormGroup;
   showPassword = false;
+  loading = false;
+  saved = false;
+  error = '';
+  email : string | null = null; 
 
-  constructor(private fb: FormBuilder, private services: CompanyService, private router: Router) {
+  ngOnInit(): void {
+      
+  }
+
+  constructor(private fb: FormBuilder, private companyServices: CompanyService, private router: Router, private route: ActivatedRoute) {
     this.registrationForm = this.fb.group({
       companyName: [{value:'',disabled:true}, [Validators.required, Validators.minLength(2)]],
       email: [{value:'',disabled:true}, [Validators.required, Validators.email]],
@@ -25,10 +33,50 @@ export class PostJobsComponent {
       location: ['', [Validators.required, Validators.minLength(2)]],
       skillsCsv: ['', [Validators.required, Validators.minLength(2)]],
       salary: [''],
+
     });
+    
+    this.route.queryParams.subscribe(params => {
+       this.email = params['email'] || '';
+     });
+
+// Show it in the disabled control
+    this.registrationForm.patchValue({ email: this.email }, { emitEvent: false });
+    this.loadProfile(); 
   }
 
   get form() { return this.registrationForm.controls; }
+
+  private clearForm()
+  {
+    this.registrationForm = this.fb.group({
+      title: '',
+      description: '',
+      location:'',
+      skillsCsv: '',
+      salary: ''
+  });
+}
+
+  private loadProfile() {
+    this.loading = true;
+    const { email } = this.registrationForm.getRawValue();
+    this.companyServices.getCompanyProfile(email).subscribe({
+      next: (p) => {
+        this.registrationForm.patchValue({
+          companyName: p.companyName,
+          email: p.email,
+          //title: p.title,
+          //description: p.description,
+          location: p.location,
+          skillsCsv: p.skillsCsv,
+          //salary: p.salary
+        });
+        this.loading = false;
+      },
+      error: () => (this.loading = false)
+    });
+  }
 
   onSubmit() {
     if (this.registrationForm.invalid) {
@@ -39,21 +87,23 @@ export class PostJobsComponent {
 
     const payload = {
       companyName: this.form['companyName'].value,
-      email: this.form['email'].value,
+      companyEmail: this.form['email'].value,
       title: this.form['title'].value,
       description: this.form['description'].value,
-      skillsCsv: this.form['skillsCsv'].value,
+      skills: this.form['skillsCsv'].value,
       location: this.form['location'].value,
       salary: this.form['salary'].value
       
     };
 
-    this.services.postJobs(payload).subscribe({
+    this.companyServices.postJobs(payload).subscribe({
       next: () => {
-        alert('Registration successful!');
-        this.registrationForm.reset();
+        alert('Job Posted successful!');
+        //this.registrationForm.reset();
+        this.loadProfile();
+        this.clearForm();
         // redirect to login page here
-        this.router.navigate(['/login']);   
+        //this.router.navigate(['/login']);   
       },
       error: (err) => alert('Error: ' + (err?.error?.message || err?.error || err.message || 'Unknown error'))
     });

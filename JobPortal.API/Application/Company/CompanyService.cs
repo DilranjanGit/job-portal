@@ -29,7 +29,7 @@ namespace JobPortal.API.Application.Company
             // Create ApplicationUser
             var user = new ApplicationUser
             {
-                UserName = fullName,
+                UserName = email,
                 Email = email
                
             };
@@ -74,7 +74,7 @@ namespace JobPortal.API.Application.Company
 
             var existingJob = await _dbContext.Jobs
                 .AsNoTracking()
-                .FirstOrDefaultAsync(j => j.CompanyProfileId == companyProfile.Id && j.Title == jobTitle, cancellationToken);
+                .FirstOrDefaultAsync(j => j.CompanyProfileId == companyProfile.Id && j.Title == jobTitle && j.Location == location && j.IsActive == true, cancellationToken);
             if (existingJob != null) return false;
 
             // Create Job

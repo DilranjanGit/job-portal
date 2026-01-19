@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using JobPortal.API.DTOs;
 using JobPortal.API.Application.Jobs;
+using Microsoft.VisualBasic;
 
 namespace JobPortal.API.Controllers
 {
@@ -88,12 +89,16 @@ namespace JobPortal.API.Controllers
             return Ok();
         }
 
-        //Get All Jobs
+        //Get List of All Jobs
         [HttpGet("jobs")]
-        public async Task<IActionResult> GetAllJobs(CancellationToken cancellationToken)
+        public async Task<ActionResult<IEnumerable<JobDto>>> GetAllJobs(string email, CancellationToken cancellationToken)
         {
-            var jobs = await _jobService.GetAllJobsAsync(cancellationToken);
-            return Ok(jobs);
+            var studentProfile = await _studentService.GetByUserEmailAsync(email,cancellationToken);
+          // var jobs;
+            //if (studentProfile is null) jobs = await _jobService.GetAllJobsAsync("",cancellationToken);
+           // else 
+           var jobdto = await _jobService.GetAllJobsAsync(studentProfile.Location,studentProfile.Id, cancellationToken);
+            return jobdto.ToList();
         }
 
         // Get Messages

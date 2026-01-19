@@ -1,0 +1,50 @@
+
+<!-- src/app/features/student/jobs/jobs.component.html -->
+
+<div class="container">
+  <h2>Available Jobs</h2>
+
+  <!-- Error -->
+  <div class="error" *ngIf="error">{{ error }}</div>
+
+  <!-- List -->
+  <div class="job-list" *ngIf="jobs?.length; else noJobs">
+    <div class="job-card" *ngFor="let job of jobs; trackBy: trackByJobId">
+
+      <div class="job-details">
+        <h3 class="job-title">{{ job.title }}</h3>
+        <div class="job-info">
+          
+          <span><strong>Company:</strong> {{ job.companyName }}</span>
+          <span><strong>Location:</strong> {{ job.location }}</span>
+
+          <span *ngIf="job.education && job.education.trim()"><strong>Education Required:</strong> {{ job.education }}</span>
+          <!-- If your model has skills as string, render it directly -->
+          <span><strong>Skills:</strong> {{ job.skills }}</span>
+          <span><strong>Description:</strong>{{job.description}}</span>
+        </div>
+      </div>
+
+      <div class="job-actions">
+        <span class="applied-label" *ngIf="job.applied">✅ Already Applied</span>
+
+        <button
+          class="btn apply-btn"
+          *ngIf="!job.applied"
+          [disabled]="isApplying(job.id)"
+          (click)="apply(job.id)"
+        >
+          <ng-container *ngIf="isApplying(job.id); else applyText">
+            Applying...
+          </ng-container>
+          <ng-template #applyText>Apply</ng-template>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <ng-template #noJobs>
+    <div class="empty">No jobs available at the moment.</div>
+  </ng-template>
+</div>
