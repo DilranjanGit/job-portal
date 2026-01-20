@@ -17,5 +17,7 @@ namespace JobPortal.API.Application.Company
         Task<CompanyProfile> GetCompanyProfileAsync(string companyEmail, CancellationToken cancellationToken=default);
         Task<IEnumerable<JobApplicationDto>> GetJobApplicationsAsync(int jobId, CancellationToken cancellationToken=default);
         Task<bool> ScheduleInterviewAsync(int jobApplicationId, DateTime interviewDate,string locationOrLink, int mode, CancellationToken cancellationToken = default);
+
+        Task<IEnumerable<ScheduleInterviewDto>> GetScheduleInterviewsAsync(int jobApplicationId,CancellationToken cancellationToken=default);
     }
 }       

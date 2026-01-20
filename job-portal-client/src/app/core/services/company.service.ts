@@ -1,3 +1,8 @@
+export interface Job{
+id: number,
+companyProfileID: number,
+
+}
 
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
@@ -28,7 +33,25 @@ export class CompanyService {
   postJobs(payload: { companyEmail:string; title: string; description: string; location : string; skills: string; salary: string}): Observable<any>{
     return this.http.post<{ success:boolean}>(`${this.companyUrl}/jobs`,payload);
   }
+
+  //Get Jobs
+  getJobs(email:string): Observable<any>{
+    return this.http.get<Job[]>(`${this.companyUrl}/jobs`,{params:{email}});
+  }
   
+  //get JobApplications
+  getJobApplications(email: string):Observable<any>{
+    return this.http.get<[]>(`${this.companyUrl}/jobsApplications`,{params:{email}});
+  }
+  //Schedule Interview
+  scheduleInterview(payload:{jobApplicationId:number;location:string;mode:number;interviewDate: Date}): Observable<any>{
+     return this.http.post<{success:boolean}>(`${this.companyUrl}/interviews/schedule`,payload);
+  }
+   //Get Schedule Interview
+   getScheduleInterview(jobApplicationId: number):Observable<any>{
+    return this.http.get<[]>(`${this.companyUrl}/interviews/getSchedule`,{params:{jobApplicationId}});
+   }
+
   }
 
  

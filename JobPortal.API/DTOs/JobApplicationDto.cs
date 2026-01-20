@@ -4,6 +4,7 @@ namespace JobPortal.API.DTOs
 {
     public class JobApplicationDto
     {
+        public int JobApplicationId{get;set;}=0;
         public string JobTitle { get; set; } = "";
         public string JobDescription { get; set; } = "";
         public string JobLocation { get; set; } = "";

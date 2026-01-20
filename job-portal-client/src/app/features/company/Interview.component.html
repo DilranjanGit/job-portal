@@ -1,0 +1,111 @@
+
+<!-- Interview.component.html -->
+<div class="interview-container">
+  <h2>Schedule Interview</h2>
+
+  <table class="jobs-table">
+    <thead>
+      <tr>
+        <th>Job Title</th>
+        <th>Location</th>
+        <th>Applications</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <!-- JOB ROW -->
+      <ng-container *ngFor="let job of jobs">
+        <tr>
+          <td>{{ job.title }}</td>
+          <td>{{ job.location }}</td>
+          <td>
+            <button (click)="toggleApplicants(job)">
+              {{ job.applications.length }}
+            </button>
+          </td>
+        </tr>
+
+        <!-- EXPANDED APPLICANTS ROW (NOW INSIDE ngFor) -->
+        <tr *ngIf="expandedJob === job" class="applicants-row">
+          <td colspan="3">
+
+            <!-- If Applications Exist -->
+            <div *ngIf="job.applications.length > 0">
+              <table class="applicants-table">
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Resume</th>
+                    <th>Schedule</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  <tr *ngFor="let app of job.applications">
+                    <td>{{ app.student.fullName }}</td>
+                    <td>{{ app.student.email }}</td>
+
+                    <td>
+                      <a 
+                        [href]="app.student.resumeUrl" 
+                        target="_blank" 
+                        *ngIf="app.student.resumeUrl">
+                        Download
+                      </a>
+                    </td>
+
+                    <td>
+                      <button (click)="openScheduleModal(app)">
+                        Schedule Interview
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- If NO Applications -->
+            <div *ngIf="job.applications.length === 0">
+              No applications yet.
+            </div>
+
+          </td>
+        </tr>
+      </ng-container>
+    </tbody>
+  </table>
+
+  <!-- Schedule Interview Modal -->
+  <div class="modal" *ngIf="showModal">
+    <div class="modal-content">
+      <h3>Schedule Interview</h3>
+
+      <form [formGroup]="scheduleForm" (ngSubmit)="submitSchedule()">
+        <input type="hidden" formControlName="jobApplicationId" />
+        <input type="hidden" formControlName="id" />
+        <div class="form-group">
+          <label>Date & Time</label>
+          <input type="datetime-local" formControlName="interviewDate" required />
+        </div>
+
+        <div class="form-group">
+          <label>Mode</label>
+          <select formControlName="mode" required>
+            <option *ngFor="let m of modes; let i = index" [value]="i">{{ m }}</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Location/Link</label>
+          <input type="text" formControlName="locationOrLink" required />
+        </div>
+
+        <div class="modal-actions">
+          <button type="submit" [disabled]="scheduleForm.invalid || scheduleForm.get('id')?.value > 0">Schedule</button>
+          <button type="button" (click)="closeModal()">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

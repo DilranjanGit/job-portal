@@ -15,6 +15,8 @@ namespace JobPortal.API.DTOs
 
         public bool Applied{get;set;}= false;
 
+        public int ApplicationCount{get;set;} = 0;
+
     }
 
     public class JobFilter

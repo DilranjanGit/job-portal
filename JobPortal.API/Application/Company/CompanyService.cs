@@ -105,6 +105,7 @@ namespace JobPortal.API.Application.Company
                 .Where(ja => ja.Id == jobId)
                 .Select(s => new JobApplicationDto
                 {
+                    JobApplicationId=s.Id,
                     JobTitle = s.Job.Title,
                     JobDescription = s.Job.Description,
                     JobLocation = s.Job.Location,
@@ -137,5 +138,23 @@ namespace JobPortal.API.Application.Company
             await _dbContext.SaveChangesAsync(cancellationToken);
             return true;
         }
+        public async Task<IEnumerable<ScheduleInterviewDto>> GetScheduleInterviewsAsync(int jobApplicationId,CancellationToken cancellationToken=default)
+        {
+            var scheduleInterviewDto =await _dbContext.Interviews.AsNoTracking()
+            .Where(i=>i.JobApplicationId==jobApplicationId)
+            .Select(s=> new ScheduleInterviewDto{
+                JobApplicationId=s.JobApplicationId,
+                Id=s.Id,
+                LocationOrLink=s.LocationOrLink,
+                Mode=(int)s.Mode,
+                InterviewDate=s.ScheduledAtLocal
+
+            })
+            .ToListAsync(cancellationToken);
+
+            return scheduleInterviewDto;
+        }
     }
+
+    
 }

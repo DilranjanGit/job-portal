@@ -50,6 +50,67 @@ namespace JobPortal.API.Controllers
             return Ok(profile);
         }
 
+        //Get jobs
+        [HttpGet("jobs")]
+       public async Task<ActionResult<IEnumerable<JobDto>>> GetAllJobs(string email, CancellationToken cancellationToken)
+        {
+            var companyProfile = await _companyService.GetCompanyProfileAsync(email,cancellationToken);
+            var jobdto = await _jobService.GetAllJobsByCompanyAsync(companyProfile.Id, cancellationToken);
+            return jobdto.ToList();
+        }
+
+        [HttpGet("jobsApplications")]
+        public async Task<IActionResult> GetJobsWithApplications( string email, CancellationToken cancellationToken)
+        {   
+            
+            var companyProfile = await _companyService.GetCompanyProfileAsync(email, cancellationToken);
+            var jobs = await _jobService.GetAllJobsByCompanyAsync(companyProfile.Id, cancellationToken);
+
+            var jobsWithApps = new List<object>();
+
+            foreach (var job in jobs)
+            {
+                var applications = await _companyService.GetJobApplicationsAsync(job.Id, cancellationToken);
+
+                var appsWithStudent = new List<object>();
+
+                foreach (var app in applications)
+                {
+        
+                   // var interview = await _companyService.GetScheduleInterviewsAsync(app.JobApplicationId, cancellationToken);
+
+                    appsWithStudent.Add(new
+                    {
+                        id = app.JobApplicationId,
+                        student = new
+                        {
+                            fullName = app.StudentFullName,
+                            email = app.StudentEmail,
+                            resumeUrl = "" // your logic
+                        }
+                        /*,
+                        interview = interview == null ? null : new
+                        {
+                            interviewId = interview.,
+                            interviewDate = interview.InterviewDate,
+                            mode = interview.Mode,
+                            locationOrLink = interview.LocationOrLink,
+                            status = interview.Status
+                        }*/
+                    });
+                }
+
+                jobsWithApps.Add(new
+                {
+                    id = job.Id,
+                    title = job.Title,
+                    location = job.Location,
+                    applications = appsWithStudent
+                });
+            }
+  
+             return Ok(jobsWithApps);
+        }
         //Post a job
         [HttpPost("jobs")]
         public async Task<IActionResult> PostJob([FromBody] JobCreateDto dto, CancellationToken cancellationToken)
@@ -99,6 +160,13 @@ namespace JobPortal.API.Controllers
             var result = await _companyService.ScheduleInterviewAsync(dto.JobApplicationId, dto.InterviewDate, dto.LocationOrLink, dto.Mode, cancellationToken);
             if (!result) return BadRequest("Interview scheduling failed");
             return Ok();
+        }
+        //Get Schedule interview
+        [HttpGet("interviews/getSchedule")]
+        public async Task<IActionResult> GetScheduleInterview(int jobApplicationId,CancellationToken cancellationToken=default)
+        {
+            var scheduleNterview = await _companyService.GetScheduleInterviewsAsync(jobApplicationId,cancellationToken);
+            return Ok(scheduleNterview);
         }
 
     }

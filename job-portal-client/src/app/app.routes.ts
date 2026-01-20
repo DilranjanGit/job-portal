@@ -46,6 +46,11 @@ export const routes: Routes = [
         path: 'postJobs',
    
         loadComponent: () => import('./features/company/postJobs.component').then(m=>m.PostJobsComponent)
+      },
+      {
+        path: 'interview',
+   
+        loadComponent: () => import('./features/company/interview.component').then(m=>m.InterviewComponent)
       }
     ] 
   },

@@ -46,7 +46,7 @@ public class JobService : IJobService
     {
         return _repo.GetAsync(jobId,ct);
     }
-    public async Task<IEnumerable<JobDto>> GetAllJobsAsync(string location = "",int studentId=0,  CancellationToken ct = default)
+    public async Task<IEnumerable<JobDto>> GetAllJobsAsync(string location = "", int studentId=0 , CancellationToken ct = default)
     {
         var jobs = await _db.Jobs
             .Include(j => j.Company)
@@ -68,35 +68,28 @@ public class JobService : IJobService
     })
     .ToListAsync(ct);
     return jobs;
-/*
-        var query = _db.Jobs
+   }
+    
+    public async Task<IEnumerable<JobDto>> GetAllJobsByCompanyAsync(int companyId, CancellationToken ct = default)
+    {
+        var jobs = await _db.Jobs
             .Include(j => j.Company)
-            .AsQueryable();
-
-        if (!string.IsNullOrEmpty(location))
-        {
-            query = query.Where(j => j.Location == location);
-        }
-
-        var jobs = await query.ToListAsync(ct);
-
-        
-        var dtoList = jobs.Select(j => new JobDto
-        {
-            Id = j.Id,
-            Title = j.Title,
-            CompanyName = j.Company.CompanyName,
-            CompanyId=j.Company.Id,
-            Location = j.Location,
-            Description = j.Description,
-            // If your domain stores CSV, pass-through. If it's a collection, join it:
-            Skills = j.SkillsCsv,
-            // If you need “Applied” per student, compute it here or pre-join it in query:
-            Applied = false //j.Applications?.Any(a => a.StudentId == studentId) == true
-        }).ToList();
-
-return dtoList;
-*/
+            .Where(j => j.CompanyProfileId == companyId)
+            .GroupJoin( _db.JobApplications, job=>job.Id, app=> app.JobId,
+            (job,apps) => new { job=job, ApplicationCount=apps.Count()})
+            .Select(x => new JobDto
+            {
+                Id = x.job.Id,
+                Title = x.job.Title,
+                CompanyId = x.job.Company.Id,
+                CompanyName = x.job.Company.CompanyName,
+                Location = x.job.Location,
+                Description = x.job.Description,
+                Skills = x.job.SkillsCsv,
+                ApplicationCount = x.ApplicationCount   // 0 if no apllicaion for job
+            })
+            .ToListAsync(ct);
+            return jobs;
     }
     
     public Task<bool> UpdateApplicationStatusAsync(int jobApplicationId, ApplicationStatus status, CancellationToken ct = default)
