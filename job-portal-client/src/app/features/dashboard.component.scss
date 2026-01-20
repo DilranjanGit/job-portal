@@ -1,54 +1,81 @@
-/* src/app/features/dashboard/dashboard.component.scss */
+
+/* src/app/features/dashboard.component.css */
+
+/* Layout: Top bar + Sidebar + Content */
 .dashboard {
   display: grid;
-  grid-template-columns: 220px 1fr;
-  min-height: 100vh;
+  grid-template-columns: 260px 1fr; /* sidebar + content */
+  grid-template-rows: auto 1fr;     /* topbar + rest */
+  height: 100vh;
+  background: #f7f8fa;
+  overflow: hidden;
 }
 
-.sidebar {
-  border-right: 1px solid #e5e7eb;
-  padding: 16px;
-  background: #f8fafc;
+/* Top bar across full width */
+.topbar {
+  grid-column: 1 / -1; /* span all columns */
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* left items and logout on the right */
+  gap: 12px;
+  padding: 10px 16px;
+  background: #ffffff;
+  border-bottom: 1px solid #e5e7eb;
+  position: sticky; /* stays visible on scroll */
+  top: 0;
+  z-index: 10;
 }
-.sidebar h3 { margin: 0 0 12px; }
-.sidebar a {
+
+.topbar-left {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  color: #374151;
+  font-size: 14px;
+}
+
+.user-name { font-weight: 600; }
+.user-email { color: #6b7280; }
+
+/* Sidebar on the left */
+.sidebar {
+  grid-row: 2;
+  grid-column: 1;
+  padding: 16px;
+  background: #ffffff;
+  border-right: 1px solid #e5e7eb;
+  overflow-y: auto;
+}
+
+.sidebar nav a {
   display: block;
-  padding: 8px 10px;
-  border-radius: 6px;
+  padding: 8px 0;
   color: #111827;
   text-decoration: none;
-  margin-bottom: 6px;
-}
-.sidebar a.active, .sidebar a:hover {
-  background: #e5edff;
-  color: #1d4ed8;
 }
 
+.sidebar nav a.active {
+  font-weight: 600;
+  color: #2563eb;
+}
+
+/* Main content area */
 .content {
-  padding: 20px;
+  grid-row: 2;
+  grid-column: 2;
+  padding: 16px;
+  overflow-y: auto;
 }
 
+/* Logout button styling */
 .logout-btn {
-  background-color: #e63946;
+  padding: 8px 14px;
+  background: #ef4444;
   color: #fff;
   border: none;
-  padding: 10px 18px;
-  width: 100%;
-  text-align: left;
-  cursor: pointer;
-  font-size: 16px;
-  font-weight: 500;
   border-radius: 6px;
-  margin-bottom: 15px;
-  transition: 0.2s ease;
+  cursor: pointer;
 }
-
 .logout-btn:hover {
-  background-color: #c62828;
-  transform: translateX(3px);
+  background: #dc2626;
 }
-
-.logout-btn:active {
-  background-color: #b71c1c;
-}
-

@@ -23,7 +23,11 @@ export class RegistrationComponent {
       password: ['', [Validators.required, Validators.minLength(6), Validators.pattern('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{6,}$')]],
     });
   }
-
+ 
+  goToLogin(): void{
+    this.router.navigate(['/login']);
+    
+  }
   get form() { return this.registrationForm.controls; }
 
   onSubmit() {

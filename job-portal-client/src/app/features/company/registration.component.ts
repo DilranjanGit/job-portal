@@ -25,6 +25,10 @@ export class CompanyRegistrationComponent {
       website: ['', [Validators.required, Validators.pattern('https?://.+')]] // accept valid URL google.com or http://google.com or https://google.com
     });
   }
+  goToLogin()
+  {
+    this.router.navigate(['/login']);
+  }
 
   get form() { return this.registrationForm.controls; }
 

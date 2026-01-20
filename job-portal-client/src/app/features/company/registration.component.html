@@ -93,6 +93,11 @@
       </div>
     </div>
 
-    <button type="submit" [disabled]="registrationForm.invalid">Register</button>
+     
+<div class="button-row">
+  <button type="submit" [disabled]="registrationForm.invalid">Register</button>
+  <button type="button" (click)="goToLogin()">Back</button>
+</div>
+
   </form>
 </div>
