@@ -141,7 +141,7 @@ namespace JobPortal.API.Application.Company
         public async Task<IEnumerable<ScheduleInterviewDto>> GetScheduleInterviewsAsync(int jobApplicationId,CancellationToken cancellationToken=default)
         {
             var scheduleInterviewDto =await _dbContext.Interviews.AsNoTracking()
-            .Where(i=>i.JobApplicationId==jobApplicationId)
+            .Where(i=>i.JobApplicationId==4)
             .Select(s=> new ScheduleInterviewDto{
                 JobApplicationId=s.JobApplicationId,
                 Id=s.Id,

@@ -25,13 +25,19 @@ export class AdminDashboardComponent implements OnInit {
   userName = '';
   email = '';
   role= '';
+  routeNotFound = false;
 
   constructor(
     private router: Router,
     private authService: AuthService,
     private studentService: StudentService,
     private companyService: CompanyService
-  ) {}
+  ) {
+    
+
+  }
+
+
 
   ngOnInit(): void {
     this.loadNavigationState();

@@ -91,7 +91,7 @@ export class  StudentProfileComponent implements OnInit
       next: () => {
         alert('Profile updated successfully');
         // Redirect to dashboard
-        this.router.navigate(['/student/dashboard'], { state: { email: payload.email } });
+        this.router.navigate(['/dashboard'], { state: { email: payload.email } });
         this.saved = true;
       },
       error: (err) => {

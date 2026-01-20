@@ -51,6 +51,10 @@ export const routes: Routes = [
         path: 'interview',
    
         loadComponent: () => import('./features/company/interview.component').then(m=>m.InterviewComponent)
+      },
+      { 
+        path: "**", 
+        loadComponent: () => import('./features/under-construction.component').then(m=>m.UnderConstructionComponent)
       }
     ] 
   },
