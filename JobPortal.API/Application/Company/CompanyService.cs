@@ -102,7 +102,7 @@ namespace JobPortal.API.Application.Company
         {
             var applications = await _dbContext.JobApplications //.Include(ja => ja.Student).Include(ja => ja.Job)
                 .AsNoTracking()
-                .Where(ja => ja.Id == jobId)
+                .Where(ja => ja.JobId == jobId)
                 .Select(s => new JobApplicationDto
                 {
                     JobApplicationId=s.Id,
@@ -141,7 +141,7 @@ namespace JobPortal.API.Application.Company
         public async Task<IEnumerable<ScheduleInterviewDto>> GetScheduleInterviewsAsync(int jobApplicationId,CancellationToken cancellationToken=default)
         {
             var scheduleInterviewDto =await _dbContext.Interviews.AsNoTracking()
-            .Where(i=>i.JobApplicationId==4)
+            .Where(i=>i.JobApplicationId==jobApplicationId)
             .Select(s=> new ScheduleInterviewDto{
                 JobApplicationId=s.JobApplicationId,
                 Id=s.Id,

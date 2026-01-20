@@ -103,7 +103,7 @@ export class PostJobsComponent implements OnInit{
         this.loadProfile();
         this.clearForm();
         // redirect to login page here
-        //this.router.navigate(['/login']);   
+        this.router.navigate(['/dashboard']);   
       },
       error: (err) => alert('Error: ' + (err?.error?.message || err?.error || err.message || 'Unknown error'))
     });
