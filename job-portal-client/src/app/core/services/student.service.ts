@@ -6,6 +6,7 @@ companyProfileID: number,
 
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { HttpResponse } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { Observable } from 'rxjs';
 
@@ -32,8 +33,17 @@ export class StudentService {
 
   // Upload Student Resume
   uploadStudentResume(resumeFile: FormData): Observable<any> {
-    return this.http.post(`${this.studentUrl}/resume`, {resumeFile});
+    return this.http.post(`${this.studentUrl}/resume`, resumeFile);
   }
+
+  //Download Student Resume
+  downloadResume(email: string): Observable<HttpResponse<Blob>> {
+    return this.http.get(`${this.studentUrl}/resume?email=${email}`, {
+      responseType: 'blob',
+      observe: 'response'
+    });
+  }
+
 
   //Get All Jobs match with student skills ans location
   getAllJobs(email: string):Observable<any>{

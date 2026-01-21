@@ -38,7 +38,7 @@ namespace JobPortal.API.Controllers
         }
         //Get All Company profiles
         [HttpGet("allProfiles")]
-         [Microsoft.AspNetCore.Authorization.AllowAnonymous]
+        [Microsoft.AspNetCore.Authorization.AllowAnonymous]
         public async Task<IEnumerable<CompanyProfile>> GetAllProfile(CancellationToken cancellationToken)
         {
             return await _companyService.GetAllCompany(cancellationToken);

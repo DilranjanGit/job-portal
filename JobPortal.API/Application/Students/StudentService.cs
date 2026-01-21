@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using JobPortal.API.DTOs;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace JobPortal.API.Application.Students
 {
@@ -55,6 +56,20 @@ namespace JobPortal.API.Application.Students
             return student;
         }
 
+        public async Task<ResumeDto> DownloadResume([FromQuery] string email)
+        {
+            var student = await _dbContext.Students
+                .Where(s => s.Email == email)
+                .Select(s => new ResumeDto
+                { 
+                    Email = email,
+                    FileData = s.ResumeFile, 
+                    FileName = s.ResumeFileName, 
+                    ContentType = s.ResumeContentType 
+                })
+                .FirstOrDefaultAsync();
+                return student;            
+        }
         public async Task<bool> RegisterAsync(string fullName, string email, string password, CancellationToken cancellationToken = default)
         {
             // Check if student already exists

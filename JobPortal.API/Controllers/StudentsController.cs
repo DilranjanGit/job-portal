@@ -73,14 +73,31 @@ namespace JobPortal.API.Controllers
         [HttpPost("resume")]
         public async Task<IActionResult> UpsertResume([FromForm] IFormFile resumeFile, [FromForm] string email, CancellationToken cancellationToken)
         {
-            if(!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+            
+            if (resumeFile == null || resumeFile.Length == 0)
+                return BadRequest("Resume file is required.");
+
+           // if (string.IsNullOrWhiteSpace(email))
+             //   return BadRequest("Email is required.");
+
             var profile = await _studentService.UpsertResumeAsync(resumeFile, email, cancellationToken);
             return Ok(profile);
         }
-  
+        // GET api/resume?email=...
+        [HttpGet("resume")]
+        public async Task<IActionResult> DownloadResume([FromQuery] string email)
+        {
+            if(email == "" || email == null)
+            {
+                return BadRequest("Please enter valid email!");
+            }
+            var result = await _studentService.DownloadResume(email);
+
+             if (result == null || result.FileData == null) 
+                return NotFound("Resume not found.");
+
+            return File(result.FileData, result.ContentType, result.FileName);
+        }
 
         // Apply to Job
         [HttpPost("apply")]
