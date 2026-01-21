@@ -131,6 +131,10 @@ namespace JobPortal.API.Application.Students
             await _dbContext.SaveChangesAsync(cancellationToken);
             return true;
         }
+        public async Task<IEnumerable<StudentProfile>> GetAllStudents(CancellationToken cancellationToken)
+        {
+            return await _dbContext.Students.AsNoTracking().ToListAsync();
+        }
 
     }
 }

@@ -52,6 +52,14 @@ export const routes: Routes = [
    
         loadComponent: () => import('./features/company/interview.component').then(m=>m.InterviewComponent)
       },
+      {
+        path: 'companyDetails',
+        loadComponent: () => import('./features/admin/manageCompany.component').then(m=>m.ManageCompanyComponent)
+      },
+      {
+        path: 'studentDetails',
+        loadComponent: () => import('./features/admin/manageStudent.component').then(m=>m.ManageStudentComponent)
+      },
       { 
         path: "**", 
         loadComponent: () => import('./features/under-construction.component').then(m=>m.UnderConstructionComponent)

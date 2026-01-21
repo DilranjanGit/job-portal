@@ -1,0 +1,33 @@
+.manage-company-container {
+  max-width: 900px;
+  margin: 32px auto;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  padding: 24px;
+}
+.company-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 16px;
+}
+.company-table th, .company-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid #e5e7eb;
+  text-align: left;
+}
+.company-table th {
+  background: #f8fafc;
+}
+.active { color: #16a34a; font-weight: bold; }
+.inactive { color: #dc2626; font-weight: bold; }
+button {
+  padding: 6px 14px;
+  border-radius: 6px;
+  border: none;
+  background: #2563eb;
+  color: #fff;
+  cursor: pointer;
+}
+button:disabled { background: #a5b4fc; cursor: not-allowed; }
+.error { color: #dc2626; margin-top: 12px; }

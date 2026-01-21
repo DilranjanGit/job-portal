@@ -98,9 +98,13 @@ namespace JobPortal.API.Application.Company
                 .AsNoTracking()
                 .FirstOrDefaultAsync(c => c.Email == companyEmail, cancellationToken);
         }
+        public async Task<IEnumerable<CompanyProfile>> GetAllCompany(CancellationToken cancellationToken)
+        {
+            return await _dbContext.Companies.AsNoTracking().ToListAsync();
+        }
         public async Task<IEnumerable<JobApplicationDto>> GetJobApplicationsAsync(int jobId, CancellationToken cancellationToken = default)
         {
-            var applications = await _dbContext.JobApplications //.Include(ja => ja.Student).Include(ja => ja.Job)
+            var applications = await _dbContext.JobApplications 
                 .AsNoTracking()
                 .Where(ja => ja.JobId == jobId)
                 .Select(s => new JobApplicationDto

@@ -37,7 +37,13 @@ namespace JobPortal.API.Controllers
             if (!result) return BadRequest("Registration failed");
             return Ok();
         }
-
+        //Get All Company profiles
+        [HttpGet("allProfiles")]
+         [Microsoft.AspNetCore.Authorization.AllowAnonymous]
+        public async Task<IEnumerable<StudentProfile>> GetAllProfile(CancellationToken cancellationToken)
+        {
+            return await _studentService.GetAllStudents(cancellationToken);
+        }
         // Get Profile by Email
         [HttpGet("profile")]
         public async Task<IActionResult> GetProfile([FromQuery] string email, CancellationToken cancellationToken)

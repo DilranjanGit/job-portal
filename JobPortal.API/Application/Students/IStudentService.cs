@@ -14,5 +14,6 @@ namespace JobPortal.API.Application.Students
         Task<bool> ApplyToJobAsync(string studentEmail, string jobId, CancellationToken cancellationToken=default);
         Task<Message[]> GetMessagesAsync(string studentEmail, CancellationToken cancellationToken=default);
         Task<bool> SendMessageAsync(string fromEmail, string toEmail, string content, CancellationToken cancellationToken=default);
+        Task<IEnumerable<StudentProfile>> GetAllStudents(CancellationToken cancellationToken);
     }
 }

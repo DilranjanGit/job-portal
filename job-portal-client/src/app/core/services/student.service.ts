@@ -44,6 +44,16 @@ export class StudentService {
   ApplyJob( payload: {studentEmail: string; jobId: string} ):Observable<any>{
      return this.http.post<{success: boolean }>(`${this.studentUrl}/apply`, payload);
   }
+// Get all Students
+    getAllStudents(): Observable<any[]> {
+      return this.http.get<any[]>(`${this.studentUrl}/allProfiles`);
+    }
+
+    // Update Student status
+    updateStudentStatus(companyId: number, isActive: boolean): Observable<any> {
+      return this.http.put(`${this.studentUrl}/status`, { companyId, isActive });
+    }
+
   // Token & Role Management
   setAuth(token: string, role: string) {
     localStorage.setItem('token', token);

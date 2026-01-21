@@ -10,7 +10,7 @@ namespace JobPortal.API.Domain
         public  string Location { get; set; }="";
         public  string SkillsCsv { get; set; }=""; // e.g., "C#,ASP.NET,SQL"
         public decimal Salary { get; set; }=0;
-    public bool IsActive { get; set; }=true;
+        public bool IsActive { get; set; }=true;
         public DateTime PostedUtc    { get; set; }=DateTime.UtcNow;
         
         public List<JobApplication> Applications { get; set; } = [];

@@ -1,0 +1,32 @@
+<div class="manage-company-container">
+  <h2>Manage Companies</h2>
+  <table class="company-table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Location</th>
+        <th>Status</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let company of companies">
+        <td>{{ company.companyName }}</td>
+        <td>{{ company.email }}</td>
+        <td>{{ company.location }}</td>
+        <td>
+          <span [class.active]="company.inActive" [class.inactive]="!company.inActive">
+            {{ company.inActive ? 'Active' : 'Inactive' }}
+          </span>
+        </td>
+        <td>
+          <button (click)="toggleStatus(company)" [disabled]="loadingId === company.id">
+            {{ company.inActive ? 'Mark Inactive' : 'Mark Active' }}
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div *ngIf="error" class="error">{{ error }}</div>
+</div>

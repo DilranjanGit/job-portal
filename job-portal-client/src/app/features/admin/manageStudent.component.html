@@ -1,0 +1,34 @@
+<div class="manage-student-container">
+  <h2>Manage Employee</h2>
+  <table class="employee-table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Location</th>
+        <th>Skills</th>
+        <th>Status</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let student of Students">
+        <td>{{ student.fullName }}</td>
+        <td>{{ student.email }}</td>
+        <td>{{ student.location }}</td>
+        <td>{{ student.skillsCsv }}</td>
+        <td>
+          <span [class.active]="student.inActive" [class.inactive]="!student.inActive">
+            {{ student.inActive ? 'Active' : 'Inactive' }}
+          </span>
+        </td>
+        <td>
+          <button (click)="toggleStatus(student)" [disabled]="loadingId === student.id">
+            {{ student.inActive ? 'Mark Inactive' : 'Mark Active' }}
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div *ngIf="error" class="error">{{ error }}</div>
+</div>

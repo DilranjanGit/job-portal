@@ -15,6 +15,7 @@ namespace JobPortal.API.Application.Company
         Task<Message[]> GetMessagesAsync(string studentEmail, CancellationToken cancellationToken=default);
         Task<bool> SendMessageAsync(string fromEmail, string toEmail, string content, CancellationToken cancellationToken=default);
         Task<CompanyProfile> GetCompanyProfileAsync(string companyEmail, CancellationToken cancellationToken=default);
+        Task<IEnumerable<CompanyProfile>> GetAllCompany(CancellationToken cancellationToken);
         Task<IEnumerable<JobApplicationDto>> GetJobApplicationsAsync(int jobId, CancellationToken cancellationToken=default);
         Task<bool> ScheduleInterviewAsync(int jobApplicationId, DateTime interviewDate,string locationOrLink, int mode, CancellationToken cancellationToken = default);
 

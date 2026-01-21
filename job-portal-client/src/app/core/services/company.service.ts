@@ -52,6 +52,16 @@ export class CompanyService {
     return this.http.get<[]>(`${this.companyUrl}/interviews/getSchedule`,{params:{jobApplicationId}});
    }
 
+   // Get all companies
+    getAllCompanies(): Observable<any[]> {
+      return this.http.get<any[]>(`${this.companyUrl}/allProfiles`);
+    }
+
+    // Update company status
+    updateCompanyStatus(companyId: number, isActive: boolean): Observable<any> {
+      return this.http.put(`${this.companyUrl}/status`, { companyId, isActive });
+    }
+
   }
 
  

@@ -16,7 +16,7 @@ namespace JobPortal.API.Domain
         public string? ResumeFileName { get; set; }             // "resume.pdf/docx"
         public string? ResumeContentType { get; set; }          // "application/pdf"
         public DateTime? ResumeUploadedAt { get; set; }
-
+        public bool InActive{get;set;}= true; // default vaule true
         public DateTime CreatedUtc { get; set; }=DateTime.UtcNow;
         public DateTime UpdatedUtc { get; set; }=DateTime.UtcNow;
         
