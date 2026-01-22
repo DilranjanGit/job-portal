@@ -8,6 +8,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { Observable } from 'rxjs';
+import { HttpResponse } from '@angular/common/http';
 
 @Injectable({ providedIn: 'root' })
 export class CompanyService {
@@ -60,6 +61,14 @@ export class CompanyService {
     // Update company status
     updateCompanyStatus(companyId: number, isActive: boolean): Observable<any> {
       return this.http.put(`${this.companyUrl}/status`, { companyId, isActive });
+    }
+
+    //Download Student Resume
+    downloadResume(email: string): Observable<HttpResponse<Blob>> {
+      return this.http.get(`${this.companyUrl}/resume?email=${email}`, {
+        responseType: 'blob',
+        observe: 'response'
+      });
     }
 
   }

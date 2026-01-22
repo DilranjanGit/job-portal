@@ -6,12 +6,13 @@ using System.Threading.Tasks;
 using JobPortal.API.DTOs;
 using JobPortal.API.Application.Jobs;
 using Microsoft.VisualBasic;
+using Microsoft.AspNetCore.Authorization;
 
 namespace JobPortal.API.Controllers
 {
     [ApiController]
     [Route("api/students")]
-    [Microsoft.AspNetCore.Authorization.Authorize(Roles = AppRoles.Student)]
+    [Authorize(Roles = AppRoles.Student)]
     public class StudentsController : ControllerBase
     {
         private readonly IStudentService _studentService;
@@ -85,6 +86,7 @@ namespace JobPortal.API.Controllers
         }
         // GET api/resume?email=...
         [HttpGet("resume")]
+        //[Authorize(Roles = AppRoles.Student + "," + AppRoles.Company)]
         public async Task<IActionResult> DownloadResume([FromQuery] string email)
         {
             if(email == "" || email == null)

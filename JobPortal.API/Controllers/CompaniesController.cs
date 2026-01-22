@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using JobPortal.API.DTOs;
 using JobPortal.API.Application.Jobs;
+using JobPortal.API.Application.Students;
 
 namespace JobPortal.API.Controllers
 {
@@ -15,10 +16,12 @@ namespace JobPortal.API.Controllers
     {
         private readonly ICompanyService _companyService;
         private readonly IJobService _jobService;
-        public CompanyController(ICompanyService companyService, IJobService jobService)
+        private readonly IStudentService _studentService;
+        public CompanyController(ICompanyService companyService, IJobService jobService,IStudentService studentService)
         {
             _companyService = companyService;
             _jobService = jobService;
+            _studentService = studentService;
         }
 
         // Registration (open to all, not protected) allow anonymous but once registered company gets "Company" role and can access other endpoints
@@ -56,6 +59,22 @@ namespace JobPortal.API.Controllers
             return Ok(profile);
         }
 
+        // GET api/resume?email=...
+        [HttpGet("resume")]
+        //[Authorize(Roles = AppRoles.Student + "," + AppRoles.Company)]
+        public async Task<IActionResult> DownloadResume([FromQuery] string email)
+        {
+            if(email == "" || email == null)
+            {
+                return BadRequest("Please enter valid email!");
+            }
+            var result = await _studentService.DownloadResume(email);
+
+             if (result == null || result.FileData == null) 
+                return NotFound("Resume not found.");
+
+            return File(result.FileData, result.ContentType, result.FileName);
+        }
         //Get jobs
         [HttpGet("jobs")]
        public async Task<ActionResult<IEnumerable<JobDto>>> GetAllJobs(string email, CancellationToken cancellationToken)
@@ -94,15 +113,7 @@ namespace JobPortal.API.Controllers
                             email = app.StudentEmail,
                             resumeUrl = "" // your logic
                         }
-                        /*,
-                        interview = interview == null ? null : new
-                        {
-                            interviewId = interview.,
-                            interviewDate = interview.InterviewDate,
-                            mode = interview.Mode,
-                            locationOrLink = interview.LocationOrLink,
-                            status = interview.Status
-                        }*/
+                        
                     });
                 }
 

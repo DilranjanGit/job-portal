@@ -116,6 +116,9 @@ namespace JobPortal.API.Application.Company
                     JobSkills = s.Job.SkillsCsv,
                     StudentFullName = s.Student.FullName,
                     StudentEmail = s.Student.Email,
+                    FileData=s.Student.ResumeFile,
+                    FileName=s.Student.ResumeFileName,
+                    ContentType=s.Student.ResumeContentType,
                     AppliedUtc = s.AppliedUtc,
                     Status =  s.Status.ToString()
                 })

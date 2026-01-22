@@ -47,12 +47,9 @@
                     <td>{{ app.student.email }}</td>
 
                     <td>
-                      <a 
-                        [href]="app.student.resumeUrl" 
-                        target="_blank" 
-                        *ngIf="app.student.resumeUrl">
+                      <button (click)="downloadResume(app)" [disabled]="!loading">
                         Download
-                      </a>
+                      </button>
                     </td>
 
                     <td>
