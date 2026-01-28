@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using JobPortal.API.DTOs;
 using JobPortal.API.Application.Jobs;
 using JobPortal.API.Application.Students;
+using Microsoft.AspNetCore.Authorization;
 
 namespace JobPortal.API.Controllers
 {
@@ -180,10 +181,11 @@ namespace JobPortal.API.Controllers
         }
         //Get Schedule interview
         [HttpGet("interviews/getSchedule")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetScheduleInterview(int jobApplicationId,CancellationToken cancellationToken=default)
         {
-            var scheduleNterview = await _companyService.GetScheduleInterviewsAsync(jobApplicationId,cancellationToken);
-            return Ok(scheduleNterview);
+            var scheduleInterview = await _companyService.GetScheduleInterviewsAsync(jobApplicationId,cancellationToken);
+            return Ok(scheduleInterview);
         }
 
     }

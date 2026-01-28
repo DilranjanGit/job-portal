@@ -14,6 +14,7 @@ namespace JobPortal.API.DTOs
         public string CompanyName { get; set; } = "";
 
         public bool Applied{get;set;}= false;
+        public bool Scheduled{get;set;}=false;
 
         public int ApplicationCount{get;set;} = 0;
 

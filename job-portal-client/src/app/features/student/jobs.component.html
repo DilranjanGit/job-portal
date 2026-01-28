@@ -27,7 +27,6 @@
 
       <div class="job-actions">
         <span class="applied-label" *ngIf="job.applied">✅ Already Applied</span>
-
         <button
           class="btn apply-btn"
           *ngIf="!job.applied"
@@ -40,6 +39,13 @@
           <ng-template #applyText>Apply</ng-template>
         </button>
       </div>
+      <div class="interview-actions">
+        <span class="scheduled-label" *ngIf="!job.scheduled">❌ Not Scheduled</span>
+        <button class="btn scheduled-btn" *ngIf="job.scheduled"  [disabled]="!job.scheduled" (click)="showSchedule(job.id)">
+          <ng-container *ngIf="!job.scheduled; else scheduledText">Schedule </ng-container>
+          <ng-template #scheduledText>Check Schedule</ng-template>
+        </button>
+      </div>
 
     </div>
   </div>
@@ -47,4 +53,28 @@
   <ng-template #noJobs>
     <div class="empty">No jobs available at the moment.</div>
   </ng-template>
+</div>
+
+<!--Scheduled Interview Modal -->
+<div class="modal" *ngIf="showModal">
+  <div class="modal-content">
+    <h3>Interview Details</h3>
+    <div>
+      <div>
+      <span> <strong> Date: </strong>{{interview.scheduledAt}}</span>
+      </div>
+      <div>
+      <span><strong>Mode: </strong>{{interview.mode}}</span>
+      </div>
+      <div>
+      <span><strong>LocationOrLink:</strong>{{interview.location}}</span>
+      </div>
+      <div>
+      <span><strong>Status:</strong>{{interview.status}}</span>
+      </div>
+    </div>
+    <div>
+    <button class="btn apply-btn" (click)="closeModal()">Close</button>
+    </div>
+  </div>
 </div>

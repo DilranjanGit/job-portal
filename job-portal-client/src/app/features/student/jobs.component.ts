@@ -10,11 +10,13 @@ export interface Job {
   education: string;
   skills: string;   // array of skill strings
   applied: boolean;   // true if student already applied
+  scheduled: boolean; // true if inteview already scheduled
 }
 
 
 import { Component, OnInit} from '@angular/core';
 import { StudentService } from '../../core/services/student.service';
+import { CompanyService } from '../../core/services/company.service';
 import { ActivatedRoute } from '@angular/router';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -31,17 +33,14 @@ import { CommonModule } from '@angular/common';
 
 
 export class JobsComponent implements OnInit {
-
-  
-jobs: Job[] = [];
+  jobs: Job[] = [];
   applying: Set<number> = new Set();
   error: string | null = null;
   email: string = "";
+  schedule: boolean = false;
+  showModal = false;
 
-  // You can pass studentId from login/session service
-  studentId: number = 101; // <-- Replace with dynamic value
-
-  constructor(private studentService: StudentService, private route: ActivatedRoute) {
+  constructor(private studentService: StudentService, private companyService: CompanyService, private route: ActivatedRoute) {
     
     this.route.queryParams.subscribe(params => {
        this.email = params['email'] || '';
@@ -49,7 +48,6 @@ jobs: Job[] = [];
 
 
   }
- 
    
   ngOnInit(): void {
     this.loadJobs();
@@ -58,16 +56,17 @@ jobs: Job[] = [];
   loadJobs(): void {
     this.studentService.getAllJobs(this.email).subscribe({
       next: (data) => {
-       console.log(data);
-this.jobs = (data || []).map((dto: any) => ({
-      id: dto.id ?? dto.jobId ?? 0,
-      title: dto.title ?? dto.jobTitle ?? '',
-      companyName: dto.company ?? dto.companyName ?? '',
-      location: dto.location ?? '',
-      description: dto.description??'',
-      education: dto.education ?? '',
-      skills: dto.skills ?? '',     // or convert to array if needed
-      applied: dto.applied ?? dto.isApplied ?? false
+      this.jobs = (data || []).map((dto: any) => ({
+        id: dto.id ?? dto.jobId ?? 0,
+        title: dto.title ?? dto.jobTitle ?? '',
+        companyName:dto.companyName ?? '',
+        location: dto.location ?? '',
+        description: dto.description??'',
+        education: dto.education ?? '',
+        skills: dto.skills ?? '',     
+        applied: dto.applied ?? false,
+        scheduled: dto.scheduled ?? false
+        
     }));
 
       },
@@ -109,5 +108,31 @@ this.jobs = (data || []).map((dto: any) => ({
 
   trackByJobId(_: number, job: Job) {
     return job.id;
+  }
+ interview={
+  scheduledAt:'',
+  location:'',
+  mode:'',
+  status:''
+ };
+  showSchedule(jobId: number) {
+    this.showModal=true;
+     this.companyService.getScheduleInterview(jobId).subscribe({
+      next: (data: any[])=>{
+        const inter = data[0];
+         // this.scheduleForm.patchValue({
+          this.interview.scheduledAt= inter.interviewDate,
+          this.interview.mode= inter.mode,
+          this.interview.location= inter.locationOrLink,
+          this.interview.status=inter.status
+           
+      },
+      error: err=> {
+        this.error="Failed to fetch interview details", err;
+      },
+     });
+  }
+  closeModal(){
+    this.showModal=false;
   }
 }

@@ -53,7 +53,7 @@ public class JobService : IJobService
             .Where(j => string.IsNullOrEmpty(location) || j.Location == location)
             .GroupJoin(
             _db.JobApplications.Where(a => a.StudentProfileId == studentId),
-            j => j.Id, a => a.JobId, (job, apps) => new { job, apps }
+            j => j.Id, a => a.JobId, (job, apps) => new { job, apps}
     )
     .Select(x => new JobDto
     {
@@ -64,7 +64,12 @@ public class JobService : IJobService
         Location = x.job.Location,
         Description = x.job.Description,
         Skills = x.job.SkillsCsv,
-        Applied = x.apps.Any()   // ← true if an application exists
+        Applied = x.apps.Any(),   // ← true if an application exists
+        Scheduled = _db.JobApplications
+            .Where(a => a.JobId == x.job.Id && a.StudentProfileId == studentId)
+            .SelectMany(a => _db.Interviews.Where(i => i.JobApplicationId == a.Id))
+            .Any()
+
     })
     .ToListAsync(ct);
     return jobs;
