@@ -39,7 +39,7 @@
           <ng-template #applyText>Apply</ng-template>
         </button>
       </div>
-      <div class="interview-actions">
+      <div class="interview-actions"  *ngIf="job.applied">
         <span class="scheduled-label" *ngIf="!job.scheduled">❌ Not Scheduled</span>
         <button class="btn scheduled-btn" *ngIf="job.scheduled"  [disabled]="!job.scheduled" (click)="showSchedule(job.id)">
           <ng-container *ngIf="!job.scheduled; else scheduledText">Schedule </ng-container>
